@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>ANTAR DARPAN</title>
+<style>
+body {
+  background:#0f1314;
+  color:#eaeaea;
+  font-family: sans-serif;
+  padding:16px;
+}
+textarea, button {
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  background:#1b1f20;
+  color:#fff;
+  border:1px solid #333;
+}
+button { cursor:pointer; }
+#response {
+  margin-top:20px;
+  line-height:1.6;
+  white-space:pre-wrap;
+}
+</style>
+</head>
+<body>
+
+<h2>ANTAR DARPAN</h2>
+
+<textarea id="userInput" rows="4"
+placeholder="यहाँ अपने शब्द लिखें..."></textarea>
+
+<button onclick="send()">देखें</button>
+
+<div id="response"></div>
+
+<script>
+const API_KEY = "PASTE_YOUR_OPENAI_API_KEY_HERE";
+
+async function send(){
+  const text = document.getElementById("userInput").value;
+  document.getElementById("response").innerText = "…";
+
+  const prompt = `
+आप ANTAR DARPAN हैं — एक जागरूकता का दर्पण।
+[पूरा वही system prompt यहाँ paste करें
+जो आपने final किया है]
+उपयोगकर्ता का पाठ:
+"${text}"
+`;
+
+  const res = await fetch(
+    "https://api.openai.com/v1/chat/completions",
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + API_KEY
+      },
+      body:JSON.stringify({
+        model:"gpt-4o-mini",
+        messages:[{role:"user", content:prompt}]
+      })
+    }
+  );
+
+  const data = await res.json();
+  document.getElementById("response").innerText =
+    data.choices[0].message.content;
+}
+</script>
+
+</body>
+</html>
