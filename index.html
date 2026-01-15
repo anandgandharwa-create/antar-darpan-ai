@@ -1,248 +1,202 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Number Dominance – Test</title>
+<title>Daily Priority Calculator</title>
 
 <style>
 body{
   margin:0;
-  font-family:system-ui,sans-serif;
-  background:#020617;
+  font-family:system-ui,Arial;
+  background:#0f172a;
   color:#fff;
-}
-header{
-  padding:14px;
-  font-size:26px;
-  text-align:center;
-  font-weight:700;
-  position:relative;
-}
-.langBtn{
-  position:absolute;
-  right:12px;
-  top:14px;
-  font-size:14px;
-  background:#1e293b;
-  color:#fff;
-  border:none;
-  padding:6px 10px;
-  border-radius:8px;
-}
-nav{
   display:flex;
-  border-top:1px solid #1e293b;
+  justify-content:center;
 }
-nav button{
-  flex:1;
-  padding:14px;
-  font-size:20px;
-  background:#020617;
-  color:#94a3b8;
-  border:none;
+.app{
+  width:100%;
+  max-width:420px;
+  min-height:100vh;
+  padding:18px;
 }
-nav button.active{
-  color:#38bdf8;
-  font-weight:bold;
-}
-.screen{
-  display:none;
-  padding:14px;
-}
-.screen.active{display:block}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-}
-.box{
-  background:#1e293b;
-  border-radius:16px;
-  padding:20px 0;
+.page{display:none}
+.page.active{display:block}
+
+header{
   text-align:center;
-  font-size:28px;
-  line-height:1.2;
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:16px;
 }
-.box.mine{
-  background:#38bdf8;
-  color:#020617;
-  font-weight:bold;
-}
+
 .card{
   background:#1e293b;
   border-radius:16px;
-  padding:18px;
-  font-size:22px;
+  padding:16px;
   margin-bottom:14px;
 }
-.big{
-  font-size:30px;
-  font-weight:bold;
-  margin-top:6px;
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
 }
-.footer{
+
+.task{
+  margin-bottom:14px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  font-size:17px;
+  border:none;
+  border-radius:28px;
+  background:linear-gradient(45deg,#38bdf8,#4ade80);
+  color:#020617;
+  margin-top:18px;
+  cursor:pointer;
+}
+
+.spinBox{
   text-align:center;
-  font-size:14px;
-  color:#64748b;
+  font-size:20px;
+  margin-top:40px;
+  animation:spin 1.5s infinite linear;
+}
+@keyframes spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+.resultTask{
+  font-size:18px;
   padding:10px;
+  border-bottom:1px solid rgba(255,255,255,.2);
+}
+.fade{
+  opacity:.4;
+}
+.small{
+  font-size:14px;
+  opacity:.7;
+  text-align:center;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<header>
-  NUMBER DOMINANCE
-  <button class="langBtn" onclick="toggleLang()">HI / EN</button>
-</header>
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+<header>📅 Daily Priority Calculator</header>
 
-<nav>
-  <button id="arenaBtn" class="active" onclick="showArena()">Arena</button>
-  <button id="utilityBtn" onclick="showUtility()">Utility</button>
-</nav>
+<div id="tasks"></div>
 
-<!-- ARENA -->
-<div id="arena" class="screen active">
-  <p id="arenaText" style="font-size:22px">अपना Number चुनें</p>
-  <div class="grid" id="grid"></div>
-  <div class="card">
-    <span id="yourLabel">आपका Number</span>
-    <div class="big" id="yourNumber">—</div>
-  </div>
+<button onclick="goSpin()">Calculate Today</button>
+<div class="small">Enter up to 5 tasks</div>
 </div>
 
-<!-- UTILITY -->
-<div id="utility" class="screen">
-  <div class="card">
-    <span id="focusLabel">Focus Time</span>
-    <div class="big" id="focusTime">—</div>
-  </div>
-  <div class="card">
-    <span id="taskLabel">Today Task</span>
-    <div class="big" id="taskText">—</div>
-  </div>
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+<header>🎡 Calculating…</header>
+<div class="spinBox">⏳</div>
 </div>
 
-<div class="footer">Testing Mode • Single HTML • No Backend</div>
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+<header>✅ Today’s Focus</header>
+
+<div class="card">
+  <strong>DO TODAY</strong>
+  <div id="doList"></div>
+</div>
+
+<div class="card fade">
+  <strong>HOLD FOR LATER</strong>
+  <div id="holdList"></div>
+</div>
+
+<div class="small">
+If only these are done today, the day counts as successful.
+</div>
+
+<button onclick="location.reload()">Done</button>
+</div>
+
+</div>
 
 <script>
-/* ---------- BASIC SETUP ---------- */
-const channel = new BroadcastChannel("number-dominance");
-const grid = document.getElementById("grid");
+const taskBox=document.getElementById("tasks");
 
-const uid = localStorage.getItem("uid") || Math.random().toString(36).slice(2);
-localStorage.setItem("uid", uid);
-
-let myNumber = localStorage.getItem("myNumber") || null;
-let lang = "hi";
-
-/* ---------- TEXT ---------- */
-const TEXT = {
-  hi:{
-    arena:"अपना Number चुनें",
-    your:"आपका Number",
-    focus:"Focus Time",
-    task:"आज का Task"
-  },
-  en:{
-    arena:"Choose your Number",
-    your:"Your Number",
-    focus:"Focus Time",
-    task:"Today Task"
-  }
-};
-
-/* ---------- DATA ---------- */
-let data = JSON.parse(localStorage.getItem("numbers")) || {};
-
-/* ---------- CREATE GRID ---------- */
-for(let i=1;i<=20;i++){
-  if(!data[i]) data[i]={owner:null,power:0};
-
-  const box=document.createElement("div");
-  box.className="box";
-  box.onclick=()=>claim(i);
-  grid.appendChild(box);
+/* CREATE INPUTS */
+for(let i=1;i<=5;i++){
+  taskBox.innerHTML+=`
+  <div class="task">
+    <input placeholder="Task ${i}">
+    <select>
+      <option value="1">Low Effort</option>
+      <option value="1.5">Medium Effort</option>
+      <option value="2">High Effort</option>
+    </select>
+    <input type="number" placeholder="Minutes" min="1">
+  </div>`;
 }
 
-render();
+function goSpin(){
+  const inputs=[...document.querySelectorAll(".task")];
+  let list=[];
 
-/* ---------- CLAIM LOGIC ---------- */
-function claim(n){
-  myNumber=n;
-  localStorage.setItem("myNumber",n);
-
-  if(data[n].owner===uid){
-    data[n].power++;
-  }else{
-    data[n].owner=uid;
-    data[n].power++;
-  }
-
-  sync();
-  render();
-  renderUtility();
-}
-
-/* ---------- SYNC ---------- */
-function sync(){
-  localStorage.setItem("numbers",JSON.stringify(data));
-  channel.postMessage("update");
-}
-
-channel.onmessage=()=> {
-  data = JSON.parse(localStorage.getItem("numbers"));
-  render();
-};
-
-/* ---------- RENDER ---------- */
-function render(){
-  document.querySelectorAll(".box").forEach((box,i)=>{
-    const n=i+1;
-    const d=data[n];
-    box.innerText = n + "\n" + d.power;
-    box.classList.toggle("mine",d.owner===uid);
+  inputs.forEach(t=>{
+    const name=t.children[0].value.trim();
+    const effort=parseFloat(t.children[1].value);
+    const time=parseInt(t.children[2].value);
+    if(name && time){
+      let score=(time*effort);
+      score+=score*(Math.random()*0.2); // random boost
+      list.push({name,score});
+    }
   });
-  document.getElementById("yourNumber").innerText=myNumber||"—";
+
+  if(list.length<2){
+    alert("Enter at least 2 tasks");
+    return;
+  }
+
+  localStorage.setItem("tasks",JSON.stringify(list));
+
+  page1.classList.remove("active");
+  page2.classList.add("active");
+
+  setTimeout(showResult,2500);
 }
 
-/* ---------- UTILITY ---------- */
-function renderUtility(){
-  if(!myNumber) return;
-  const start=(myNumber%12)+8;
-  focusTime.innerText=`${start}:00 – ${start+1}:00`;
-}
+function showResult(){
+  const list=JSON.parse(localStorage.getItem("tasks"));
+  list.sort((a,b)=>b.score-a.score);
 
-const tasks=[
-  "5 min no phone",
-  "Call one person",
-  "Finish 1 pending task",
-  "10 min walk"
-];
-taskText.innerText=tasks[new Date().getDate()%tasks.length];
+  const doList=document.getElementById("doList");
+  const holdList=document.getElementById("holdList");
 
-/* ---------- NAV ---------- */
-function showArena(){
-  arena.classList.add("active");
-  utility.classList.remove("active");
-  arenaBtn.classList.add("active");
-  utilityBtn.classList.remove("active");
-}
-function showUtility(){
-  utility.classList.add("active");
-  arena.classList.remove("active");
-  utilityBtn.classList.add("active");
-  arenaBtn.classList.remove("active");
-}
+  doList.innerHTML="";
+  holdList.innerHTML="";
 
-/* ---------- LANGUAGE ---------- */
-function toggleLang(){
-  lang=lang==="hi"?"en":"hi";
-  arenaText.innerText=TEXT[lang].arena;
-  yourLabel.innerText=TEXT[lang].your;
-  focusLabel.innerText=TEXT[lang].focus;
-  taskLabel.innerText=TEXT[lang].task;
+  list.forEach((t,i)=>{
+    const div=document.createElement("div");
+    div.className="resultTask";
+    div.innerText=t.name;
+    if(i<2) doList.appendChild(div);
+    else holdList.appendChild(div);
+  });
+
+  page2.classList.remove("active");
+  page3.classList.add("active");
 }
 </script>
 
