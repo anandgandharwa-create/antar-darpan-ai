@@ -2,74 +2,247 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>ANTAR DARPAN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Dominance – Test</title>
+
 <style>
-body {
-  background:#0f1314;
-  color:#eaeaea;
-  font-family: sans-serif;
-  padding:16px;
-}
-textarea, button {
-  width:100%;
-  margin-top:12px;
-  padding:10px;
-  background:#1b1f20;
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#020617;
   color:#fff;
-  border:1px solid #333;
 }
-button { cursor:pointer; }
-#response {
-  margin-top:20px;
-  line-height:1.6;
-  white-space:pre-wrap;
+header{
+  padding:14px;
+  font-size:26px;
+  text-align:center;
+  font-weight:700;
+  position:relative;
+}
+.langBtn{
+  position:absolute;
+  right:12px;
+  top:14px;
+  font-size:14px;
+  background:#1e293b;
+  color:#fff;
+  border:none;
+  padding:6px 10px;
+  border-radius:8px;
+}
+nav{
+  display:flex;
+  border-top:1px solid #1e293b;
+}
+nav button{
+  flex:1;
+  padding:14px;
+  font-size:20px;
+  background:#020617;
+  color:#94a3b8;
+  border:none;
+}
+nav button.active{
+  color:#38bdf8;
+  font-weight:bold;
+}
+.screen{
+  display:none;
+  padding:14px;
+}
+.screen.active{display:block}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.box{
+  background:#1e293b;
+  border-radius:16px;
+  padding:20px 0;
+  text-align:center;
+  font-size:28px;
+  line-height:1.2;
+}
+.box.mine{
+  background:#38bdf8;
+  color:#020617;
+  font-weight:bold;
+}
+.card{
+  background:#1e293b;
+  border-radius:16px;
+  padding:18px;
+  font-size:22px;
+  margin-bottom:14px;
+}
+.big{
+  font-size:30px;
+  font-weight:bold;
+  margin-top:6px;
+}
+.footer{
+  text-align:center;
+  font-size:14px;
+  color:#64748b;
+  padding:10px;
 }
 </style>
 </head>
+
 <body>
 
-<h2>ANTAR DARPAN</h2>
+<header>
+  NUMBER DOMINANCE
+  <button class="langBtn" onclick="toggleLang()">HI / EN</button>
+</header>
 
-<textarea id="userInput" rows="4"
-placeholder="यहाँ अपने शब्द लिखें..."></textarea>
+<nav>
+  <button id="arenaBtn" class="active" onclick="showArena()">Arena</button>
+  <button id="utilityBtn" onclick="showUtility()">Utility</button>
+</nav>
 
-<button onclick="send()">देखें</button>
+<!-- ARENA -->
+<div id="arena" class="screen active">
+  <p id="arenaText" style="font-size:22px">अपना Number चुनें</p>
+  <div class="grid" id="grid"></div>
+  <div class="card">
+    <span id="yourLabel">आपका Number</span>
+    <div class="big" id="yourNumber">—</div>
+  </div>
+</div>
 
-<div id="response"></div>
+<!-- UTILITY -->
+<div id="utility" class="screen">
+  <div class="card">
+    <span id="focusLabel">Focus Time</span>
+    <div class="big" id="focusTime">—</div>
+  </div>
+  <div class="card">
+    <span id="taskLabel">Today Task</span>
+    <div class="big" id="taskText">—</div>
+  </div>
+</div>
+
+<div class="footer">Testing Mode • Single HTML • No Backend</div>
 
 <script>
-const API_KEY = "PASTE_YOUR_OPENAI_API_KEY_HERE";
+/* ---------- BASIC SETUP ---------- */
+const channel = new BroadcastChannel("number-dominance");
+const grid = document.getElementById("grid");
 
-async function send(){
-  const text = document.getElementById("userInput").value;
-  document.getElementById("response").innerText = "…";
+const uid = localStorage.getItem("uid") || Math.random().toString(36).slice(2);
+localStorage.setItem("uid", uid);
 
-  const prompt = `
-आप ANTAR DARPAN हैं — एक जागरूकता का दर्पण।
-[पूरा वही system prompt यहाँ paste करें
-जो आपने final किया है]
-उपयोगकर्ता का पाठ:
-"${text}"
-`;
+let myNumber = localStorage.getItem("myNumber") || null;
+let lang = "hi";
 
-  const res = await fetch(
-    "https://api.openai.com/v1/chat/completions",
-    {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + API_KEY
-      },
-      body:JSON.stringify({
-        model:"gpt-4o-mini",
-        messages:[{role:"user", content:prompt}]
-      })
-    }
-  );
+/* ---------- TEXT ---------- */
+const TEXT = {
+  hi:{
+    arena:"अपना Number चुनें",
+    your:"आपका Number",
+    focus:"Focus Time",
+    task:"आज का Task"
+  },
+  en:{
+    arena:"Choose your Number",
+    your:"Your Number",
+    focus:"Focus Time",
+    task:"Today Task"
+  }
+};
 
-  const data = await res.json();
-  document.getElementById("response").innerText =
-    data.choices[0].message.content;
+/* ---------- DATA ---------- */
+let data = JSON.parse(localStorage.getItem("numbers")) || {};
+
+/* ---------- CREATE GRID ---------- */
+for(let i=1;i<=20;i++){
+  if(!data[i]) data[i]={owner:null,power:0};
+
+  const box=document.createElement("div");
+  box.className="box";
+  box.onclick=()=>claim(i);
+  grid.appendChild(box);
+}
+
+render();
+
+/* ---------- CLAIM LOGIC ---------- */
+function claim(n){
+  myNumber=n;
+  localStorage.setItem("myNumber",n);
+
+  if(data[n].owner===uid){
+    data[n].power++;
+  }else{
+    data[n].owner=uid;
+    data[n].power++;
+  }
+
+  sync();
+  render();
+  renderUtility();
+}
+
+/* ---------- SYNC ---------- */
+function sync(){
+  localStorage.setItem("numbers",JSON.stringify(data));
+  channel.postMessage("update");
+}
+
+channel.onmessage=()=> {
+  data = JSON.parse(localStorage.getItem("numbers"));
+  render();
+};
+
+/* ---------- RENDER ---------- */
+function render(){
+  document.querySelectorAll(".box").forEach((box,i)=>{
+    const n=i+1;
+    const d=data[n];
+    box.innerText = n + "\n" + d.power;
+    box.classList.toggle("mine",d.owner===uid);
+  });
+  document.getElementById("yourNumber").innerText=myNumber||"—";
+}
+
+/* ---------- UTILITY ---------- */
+function renderUtility(){
+  if(!myNumber) return;
+  const start=(myNumber%12)+8;
+  focusTime.innerText=`${start}:00 – ${start+1}:00`;
+}
+
+const tasks=[
+  "5 min no phone",
+  "Call one person",
+  "Finish 1 pending task",
+  "10 min walk"
+];
+taskText.innerText=tasks[new Date().getDate()%tasks.length];
+
+/* ---------- NAV ---------- */
+function showArena(){
+  arena.classList.add("active");
+  utility.classList.remove("active");
+  arenaBtn.classList.add("active");
+  utilityBtn.classList.remove("active");
+}
+function showUtility(){
+  utility.classList.add("active");
+  arena.classList.remove("active");
+  utilityBtn.classList.add("active");
+  arenaBtn.classList.remove("active");
+}
+
+/* ---------- LANGUAGE ---------- */
+function toggleLang(){
+  lang=lang==="hi"?"en":"hi";
+  arenaText.innerText=TEXT[lang].arena;
+  yourLabel.innerText=TEXT[lang].your;
+  focusLabel.innerText=TEXT[lang].focus;
+  taskLabel.innerText=TEXT[lang].task;
 }
 </script>
 
