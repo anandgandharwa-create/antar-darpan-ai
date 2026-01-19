@@ -1,202 +1,234 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Priority Calculator</title>
+<title>Caption IQ – Viral IQ</title>
 
 <style>
+:root{
+  --primary:#3b82f6;
+  --secondary:#22d3ee;
+  --bg:#020617;
+  --card:#0b1220;
+  --border:#1f2937;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+}
+
+*{box-sizing:border-box;}
+
 body{
   margin:0;
-  font-family:system-ui,Arial;
-  background:#0f172a;
-  color:#fff;
+  background:linear-gradient(180deg,#020617,#020617);
+  font-family:system-ui, sans-serif;
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* FULL SCREEN + BIG SCALE */
+.wrapper{
+  min-height:100vh;
   display:flex;
   justify-content:center;
+  align-items:flex-start;
+  padding-top:60px;
 }
-.app{
+
+.container{
   width:100%;
   max-width:420px;
-  min-height:100vh;
-  padding:18px;
-}
-.page{display:none}
-.page.active{display:block}
-
-header{
-  text-align:center;
-  font-size:22px;
-  font-weight:600;
-  margin-bottom:16px;
+  transform:scale(1.9);              /* 👈 BIG SCALE */
+  transform-origin:top center;
 }
 
 .card{
-  background:#1e293b;
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:14px;
+  background:var(--card);
+  border-radius:26px;
+  padding:30px;
+  border:1px solid var(--border);
+  box-shadow:0 30px 70px rgba(0,0,0,0.75);
 }
 
-input,select{
+h1{
+  text-align:center;
+  font-size:26px;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  text-align:center;
+  font-size:15px;
+  color:var(--muted);
+  margin-bottom:22px;
+}
+
+label{
+  display:block;
+  margin-top:14px;
+  font-weight:600;
+  font-size:15px;
+  color:#c7d2fe;
+}
+
+input, select{
   width:100%;
-  padding:12px;
-  margin-top:8px;
-  border-radius:10px;
-  border:none;
+  padding:14px;
   font-size:16px;
-}
-
-.task{
-  margin-bottom:14px;
+  border-radius:14px;
+  background:#020617;
+  color:var(--text);
+  border:1px solid var(--border);
+  margin-top:6px;
 }
 
 button{
   width:100%;
-  padding:14px;
+  padding:16px;
   font-size:17px;
+  font-weight:800;
   border:none;
-  border-radius:28px;
-  background:linear-gradient(45deg,#38bdf8,#4ade80);
+  border-radius:16px;
+  margin-top:20px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
   color:#020617;
-  margin-top:18px;
-  cursor:pointer;
 }
 
-.spinBox{
-  text-align:center;
-  font-size:20px;
-  margin-top:40px;
-  animation:spin 1.5s infinite linear;
-}
-@keyframes spin{
-  from{transform:rotate(0deg)}
-  to{transform:rotate(360deg)}
+.result{
+  display:none;
+  margin-top:22px;
 }
 
-.resultTask{
-  font-size:18px;
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,.2);
+.box{
+  background:#020617;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:14px;
 }
-.fade{
-  opacity:.4;
-}
-.small{
+
+.box-title{
   font-size:14px;
-  opacity:.7;
-  text-align:center;
+  color:#38bdf8;
+  margin-bottom:6px;
+  font-weight:600;
+}
+
+.output{
+  font-size:15px;
+  line-height:1.6;
+  color:#e5e7eb;
+}
+
+.copy{
   margin-top:10px;
+  background:#111827;
+  color:#22d3ee;
+  font-size:14px;
+  padding:10px;
+  border-radius:12px;
+}
+
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:16px;
 }
 </style>
 </head>
 
 <body>
-<div class="app">
 
-<!-- PAGE 1 -->
-<div class="page active" id="page1">
-<header>📅 Daily Priority Calculator</header>
+<div class="wrapper">
+  <div class="container">
+    <div class="card">
 
-<div id="tasks"></div>
+      <h1>✍️ Caption IQ</h1>
+      <div class="subtitle">Captions aur hashtags jo reach badhaye</div>
 
-<button onclick="goSpin()">Calculate Today</button>
-<div class="small">Enter up to 5 tasks</div>
-</div>
+      <label>Reel / Video Topic</label>
+      <input id="topic" placeholder="Jaise: Self confidence, Business tips">
 
-<!-- PAGE 2 -->
-<div class="page" id="page2">
-<header>🎡 Calculating…</header>
-<div class="spinBox">⏳</div>
-</div>
+      <label>Tone</label>
+      <select id="tone">
+        <option>Motivational</option>
+        <option>Funny</option>
+        <option>Bold</option>
+        <option>Emotional</option>
+      </select>
 
-<!-- PAGE 3 -->
-<div class="page" id="page3">
-<header>✅ Today’s Focus</header>
+      <label>Language</label>
+      <select id="lang">
+        <option>Hindi</option>
+        <option>Hinglish</option>
+        <option>English</option>
+      </select>
 
-<div class="card">
-  <strong>DO TODAY</strong>
-  <div id="doList"></div>
-</div>
+      <button onclick="generate()">✨ Caption Generate करें</button>
 
-<div class="card fade">
-  <strong>HOLD FOR LATER</strong>
-  <div id="holdList"></div>
-</div>
+      <div class="result" id="resultBox">
 
-<div class="small">
-If only these are done today, the day counts as successful.
-</div>
+        <div class="box">
+          <div class="box-title">Caption</div>
+          <div class="output" id="captionText"></div>
+          <div class="copy" onclick="copyText('captionText')">📋 Copy Caption</div>
+        </div>
 
-<button onclick="location.reload()">Done</button>
-</div>
+        <div class="box">
+          <div class="box-title">Hashtags</div>
+          <div class="output" id="hashtagText"></div>
+          <div class="copy" onclick="copyText('hashtagText')">📋 Copy Hashtags</div>
+        </div>
 
+      </div>
+
+      <div class="footer">
+        Viral IQ · Caption Intelligence
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <script>
-const taskBox=document.getElementById("tasks");
+function generate(){
+  const topic=topicInput.value || "your reel";
+  const tone=toneSelect.value;
+  const lang=langSelect.value;
 
-/* CREATE INPUTS */
-for(let i=1;i<=5;i++){
-  taskBox.innerHTML+=`
-  <div class="task">
-    <input placeholder="Task ${i}">
-    <select>
-      <option value="1">Low Effort</option>
-      <option value="1.5">Medium Effort</option>
-      <option value="2">High Effort</option>
-    </select>
-    <input type="number" placeholder="Minutes" min="1">
-  </div>`;
-}
+  let caption="", hashtags="";
 
-function goSpin(){
-  const inputs=[...document.querySelectorAll(".task")];
-  let list=[];
-
-  inputs.forEach(t=>{
-    const name=t.children[0].value.trim();
-    const effort=parseFloat(t.children[1].value);
-    const time=parseInt(t.children[2].value);
-    if(name && time){
-      let score=(time*effort);
-      score+=score*(Math.random()*0.2); // random boost
-      list.push({name,score});
-    }
-  });
-
-  if(list.length<2){
-    alert("Enter at least 2 tasks");
-    return;
+  if(lang==="Hindi"){
+    caption=`"${topic} par ek baat yaad rakhna 🔥
+Consistency hi success ka secret hai.
+Is reel ko end tak dekho!"`;
+    hashtags="#reels #viralreel #motivation #hindireels #creator";
+  }else if(lang==="Hinglish"){
+    caption=`"${topic} ka ek hi rule hai 🚀
+Daily improve karo, results khud aayenge.
+Save & share this reel!"`;
+    hashtags="#reelsindia #creatorlife #viral #growth #content";
+  }else{
+    caption=`"${topic} is not about luck 🔥
+It's about consistency and clarity.
+Watch till the end!"`;
+    hashtags="#reels #viralvideo #contentcreator #growth #shorts";
   }
 
-  localStorage.setItem("tasks",JSON.stringify(list));
-
-  page1.classList.remove("active");
-  page2.classList.add("active");
-
-  setTimeout(showResult,2500);
+  captionText.innerText=caption;
+  hashtagText.innerText=hashtags;
+  resultBox.style.display="block";
 }
 
-function showResult(){
-  const list=JSON.parse(localStorage.getItem("tasks"));
-  list.sort((a,b)=>b.score-a.score);
+const topicInput=document.getElementById("topic");
+const toneSelect=document.getElementById("tone");
+const langSelect=document.getElementById("lang");
 
-  const doList=document.getElementById("doList");
-  const holdList=document.getElementById("holdList");
-
-  doList.innerHTML="";
-  holdList.innerHTML="";
-
-  list.forEach((t,i)=>{
-    const div=document.createElement("div");
-    div.className="resultTask";
-    div.innerText=t.name;
-    if(i<2) doList.appendChild(div);
-    else holdList.appendChild(div);
-  });
-
-  page2.classList.remove("active");
-  page3.classList.add("active");
+function copyText(id){
+  const text=document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
 }
 </script>
 
