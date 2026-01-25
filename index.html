@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thought Meter Calculator</title>
+<title>Thought Spin Calculator</title>
 
 <style>
 body{
@@ -33,9 +33,17 @@ button.option.active{background:#fff;color:#000;}
   font-size:16px;border:none;border-radius:20px;
 }
 
-/* ----- Meter ----- */
-.meter-box{
-  width:220px;height:220px;margin:20px auto;
+/* -------- Spin Wheel -------- */
+.wheel-container{
+  width:240px;
+  height:240px;
+  margin:30px auto;
+  position:relative;
+}
+
+.wheel{
+  width:100%;
+  height:100%;
   border-radius:50%;
   background:conic-gradient(
     #2ecc71 0deg 90deg,
@@ -43,15 +51,25 @@ button.option.active{background:#fff;color:#000;}
     #e67e22 180deg 270deg,
     #e74c3c 270deg 360deg
   );
-  display:flex;align-items:center;justify-content:center;
+  transition:transform 3s ease-out;
 }
-.meter-inner{
-  width:160px;height:160px;border-radius:50%;
-  background:#0f1115;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;font-size:18px;
+
+.pointer{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-bottom:20px solid #fff;
 }
-.result{text-align:center;margin-top:10px;font-size:20px;}
+
+.result{
+  text-align:center;
+  font-size:20px;
+  margin-top:15px;
+}
 </style>
 </head>
 
@@ -60,7 +78,7 @@ button.option.active{background:#fff;color:#000;}
 <!-- SCREEN 1 : INPUT -->
 <div id="screen1" class="screen active">
   <h2>अपने आप से सच बोलें</h2>
-  <p class="small">अगर उत्तर ईमानदार हैं, मीटर सही पढ़ेगा</p>
+  <p class="small">ईमानदार उत्तर → सही reading</p>
 
   <div class="question" data-q="0">
     <b>1. क्या मन बेचैन है?</b>
@@ -83,16 +101,19 @@ button.option.active{background:#fff;color:#000;}
     <button class="option" data-score="0">हाँ</button>
   </div>
 
-  <button class="main-btn" onclick="calculate()">मीटर देखें</button>
+  <button class="main-btn" onclick="goToSpin()">Spin Wheel</button>
 </div>
 
-<!-- SCREEN 2 : RESULT -->
+<!-- SCREEN 2 : SPIN + RESULT -->
 <div id="screen2" class="screen">
-  <h2>Thought Meter</h2>
+  <h2>Thought Spin</h2>
 
-  <div class="meter-box">
-    <div id="meterText" class="meter-inner">...</div>
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel"></div>
   </div>
+
+  <button class="main-btn" onclick="spin()">घुमाएँ</button>
 
   <div id="state" class="result"></div>
   <p id="line" class="small"></p>
@@ -102,6 +123,13 @@ button.option.active{background:#fff;color:#000;}
 
 <script>
 const answers=[null,null,null];
+
+const states=[
+  ["शांति / साक्षी","कुछ पकड़ में नहीं है"],
+  ["स्मृति / आदत","मन अतीत की लय में है"],
+  ["इच्छा / द्वंद्व","कुछ चाह या निर्णय चल रहा है"],
+  ["चिन्ता / भय","मन किसी विचार से जकड़ा है"]
+];
 
 document.querySelectorAll(".option").forEach(btn=>{
   btn.onclick=function(){
@@ -113,40 +141,34 @@ document.querySelectorAll(".option").forEach(btn=>{
   }
 });
 
-function calculate(){
+let finalIndex=0;
+
+function goToSpin(){
   if(answers.includes(null)){
     alert("तीनों सवालों के उत्तर दें");
     return;
   }
   const total=answers.reduce((a,b)=>a+b,0);
 
-  let state="",line="",center="";
-  if(total>=5){
-    state="चिन्ता / भय";
-    line="मन किसी विचार से जकड़ा हुआ है";
-    center="उच्च तनाव";
-  }else if(total>=3){
-    state="इच्छा / द्वंद्व";
-    line="कुछ चाह या निर्णय चल रहा है";
-    center="मध्यम हलचल";
-  }else if(total>=1){
-    state="स्मृति / आदत";
-    line="मन अतीत की लय में है";
-    center="हल्की गति";
-  }else{
-    state="शांति / साक्षी";
-    line="कुछ पकड़ में नहीं है";
-    center="शून्य";
-  }
+  if(total===0) finalIndex=0;
+  else if(total<=2) finalIndex=1;
+  else if(total<=4) finalIndex=2;
+  else finalIndex=3;
 
   document.getElementById("screen1").classList.remove("active");
   document.getElementById("screen2").classList.add("active");
+}
 
-  document.getElementById("state").innerText=state;
-  document.getElementById("line").innerText=line;
-  document.getElementById("meterText").innerText=center;
+function spin(){
+  const wheel=document.getElementById("wheel");
+  const angle=360*3 + finalIndex*90;
+  wheel.style.transform=`rotate(${angle}deg)`;
 
-  navigator.vibrate?.(40);
+  setTimeout(()=>{
+    document.getElementById("state").innerText=states[finalIndex][0];
+    document.getElementById("line").innerText=states[finalIndex][1];
+    navigator.vibrate?.(40);
+  },3000);
 }
 
 function reset(){
