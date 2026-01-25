@@ -7,40 +7,56 @@
 
 <style>
 body{
-  font-family: system-ui, sans-serif;
   margin:0;
-  padding:20px;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  padding:16px;
+  font-family: system-ui, sans-serif;
+  background: linear-gradient(180deg,#0b2c35,#0f3d4a,#0b2c35);
   color:#fff;
 }
 
-.screen{ display:none; }
+.screen{
+  display:none;
+  max-width:480px;
+  margin:0 auto;
+}
 .active{ display:block; }
 
 h2{text-align:center;}
-.small{opacity:.8;font-size:14px;text-align:center;}
+.small{
+  opacity:.75;
+  font-size:14px;
+  text-align:center;
+}
 
 .question{
-  background: rgba(255,255,255,0.08);
-  padding:16px;
-  border-radius:14px;
+  background: linear-gradient(135deg,#264653,#1f3c44);
+  padding:18px;
   margin:18px 0;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  border-radius:18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
-/* ===== BUTTON FIX ===== */
-.main-btn,
-button.option{
-  width:100%;
-  max-width:420px;
-  margin:12px auto;
+  .question b{
+  font-size:18px;
   display:block;
-  text-align:center;
-  font-size:16px;
-  box-sizing:border-box;
+  margin-bottom:12px;
 }
 
+/* ===== BUTTON FIX ===== */
+.main-btn{
+  width:100%;
+  max-width:420px;
+  margin:24px auto;
+  padding:16px;
+  border:none;
+  border-radius:28px;
+  font-size:18px;
+  font-weight:600;
+  background: linear-gradient(90deg,#00f5d4,#4cc9f0);
+  color:#000;
+  display:block;
+}
 button.option.active{
-  background: linear-gradient(90deg,#ff9f1c,#ff3b3b);
+  background: linear-gradient(90deg,#06d6a0,#4cc9f0);
   color:#000;
   font-weight:600;
 }
