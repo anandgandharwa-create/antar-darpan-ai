@@ -13,7 +13,7 @@
     body {
       margin: 0;
       height: 100vh;
-      background: radial-gradient(circle at top, #2a004f, #05010a);
+      background: #000000; /* AMOLED PURE BLACK */
       color: #ffffff;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
@@ -24,15 +24,16 @@
     .screen {
       width: 100%;
       max-width: 360px;
-      padding: 24px;
+      padding: 26px 22px;
       text-align: center;
     }
 
     .tagline {
       font-size: 16px;
-      color: #ffd84d; /* YELLOW */
-      margin-bottom: 22px;
+      color: #ffd84d; /* Yellow */
+      margin-bottom: 24px;
       letter-spacing: 0.4px;
+      min-height: 40px;
     }
 
     h1 {
@@ -49,9 +50,9 @@
       border: none;
       outline: none;
       text-align: center;
-      background: #140022;
+      background: #050505;
       color: #ffffff;
-      box-shadow: 0 0 18px rgba(255, 216, 77, 0.35);
+      box-shadow: 0 0 16px rgba(255, 216, 77, 0.35);
     }
 
     .result {
@@ -65,7 +66,7 @@
     .footer {
       margin-top: 20px;
       font-size: 14px;
-      color: #cccccc;
+      color: #aaaaaa;
     }
   </style>
 </head>
@@ -73,9 +74,7 @@
 <body>
 
   <div class="screen">
-    <div class="tagline">
-      आप समय नहीं मारते, समय आपको काटता है।
-    </div>
+    <div class="tagline" id="tagline"></div>
 
     <h1>आपकी उम्र कितनी है?</h1>
 
@@ -94,6 +93,16 @@
   </div>
 
   <script>
+    // A/B TEST TAGLINES
+    const taglines = [
+      "आप समय नहीं मारते, समय आपको काटता है।",
+      "हर दिन कट रहा है — सवाल है, किसके लिए?",
+      "समय मुफ्त नहीं है, बस बिल बाद में आता है।"
+    ];
+
+    document.getElementById("tagline").innerText =
+      taglines[Math.floor(Math.random() * taglines.length)];
+
     function calculateTime() {
       const age = document.getElementById("age").value;
       const result = document.getElementById("result");
