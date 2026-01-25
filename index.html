@@ -1,239 +1,115 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thought Spin Calculator</title>
+  <meta charset="UTF-8">
+  <title>Time Cost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-/* ===== BASE ===== */
-body{
-  margin:0;
-  padding:16px;
-  font-family: system-ui, sans-serif;
-  background: radial-gradient(circle at top,#2c5364,#0f2027 60%,#000814);
-  color:#fff;
-}
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #1b0033, #05010a);
+      color: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-/* ===== SCREEN ===== */
-.screen{
-  display:none;
-  max-width:480px;
-  margin:0 auto;
-}
-.active{display:block;}
+    .screen {
+      width: 100%;
+      max-width: 360px;
+      padding: 24px;
+      text-align: center;
+    }
 
-h2{text-align:center;margin-top:10px;}
-.small{opacity:.75;font-size:14px;text-align:center}
+    .tagline {
+      font-size: 16px;
+      color: #ff6ec7;
+      margin-bottom: 18px;
+      letter-spacing: 0.4px;
+    }
 
-/* ===== QUESTION CARD ===== */
-.question{
-  background: linear-gradient(180deg,#2b2b2b,#1f1f1f);
-  padding:22px;
-  margin:24px 0;
-  border-radius:22px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    0 25px 50px rgba(0,0,0,.6);
-}
+    h1 {
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
 
-.question b{
-  font-size:19px;
-  display:block;
-  margin-bottom:16px;
-}
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      text-align: center;
+      background: #12001f;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(255,110,199,0.3);
+    }
 
-/* ===== OPTION BUTTONS ===== */
-button.option{
-  width:100%;
-  padding:20px;
-  margin:14px 0;
-  border:none;
-  border-radius:18px;
-  font-size:17px;
-  background: linear-gradient(90deg,#3a3a3a,#2c2c2c);
-  color:#fff;
-  text-align:left;
-  display:block;
-}
+    .result {
+      margin-top: 26px;
+      font-size: 22px;
+      line-height: 1.5;
+      color: #00ffd5;
+      min-height: 80px;
+    }
 
-button.option.active{
-  background: linear-gradient(90deg,#0fb9b1,#20bf6b);
-  color:#000;
-  font-weight:700;
-}
-
-/* ===== MAIN BUTTON ===== */
-.main-btn{
-  width:100%;
-  padding:22px;
-  margin:32px auto;
-  border:none;
-  border-radius:44px;
-  font-size:20px;
-  font-weight:700;
-  background: linear-gradient(90deg,#00f5d4,#4cc9f0);
-  color:#000;
-  display:block;
-  text-align:center;
-}
-
-/* ===== SPIN WHEEL ===== */
-.wheel-container{
-  width:240px;
-  height:240px;
-  margin:30px auto;
-  position:relative;
-}
-
-.pointer{
-  position:absolute;
-  top:-12px;
-  left:50%;
-  transform:translateX(-50%);
-  width:0;height:0;
-  border-left:12px solid transparent;
-  border-right:12px solid transparent;
-  border-bottom:22px solid #fff;
-}
-
-.wheel{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  background: conic-gradient(
-    #ff3b3b 0deg 45deg,
-    #ff9f1c 45deg 90deg,
-    #ffe66d 90deg 135deg,
-    #4cd137 135deg 180deg,
-    #1dd1a1 180deg 225deg,
-    #54a0ff 225deg 270deg,
-    #5f27cd 270deg 315deg,
-    #c56cf0 315deg 360deg
-  );
-  transition:
-    transform 3s ease-out,
-    box-shadow 2.5s ease-out;
-}
-
-.wheel.glow{
-  box-shadow:
-    0 0 28px rgba(255,255,255,0.25),
-    0 0 60px rgba(255,255,255,0.15);
-}
-
-/* ===== RESULT ===== */
-.result{
-  text-align:center;
-  font-size:22px;
-  margin-top:16px;
-}
-</style>
+    .footer {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #bbbbbb;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- SCREEN 1 -->
-<div id="screen1" class="screen active">
-  <h2>अपने आप से सच बोलें</h2>
-  <p class="small">ईमानदार उत्तर → सही reading</p>
+  <div class="screen">
+    <div class="tagline">
+      आप समय नहीं मारते, समय आपको काटता है।
+    </div>
 
-  <div class="question" data-q="0">
-    <b>1. क्या मन बेचैन है?</b>
-    <button class="option" data-score="2">हाँ, बहुत</button>
-    <button class="option" data-score="1">थोड़ा</button>
-    <button class="option" data-score="0">नहीं</button>
+    <h1>आपकी उम्र कितनी है?</h1>
+
+    <input 
+      type="number" 
+      id="age" 
+      placeholder="उम्र लिखें" 
+      oninput="calculateTime()" 
+    />
+
+    <div class="result" id="result"></div>
+
+    <div class="footer">
+      आज का दिन किस पर खर्च करेंगे?
+    </div>
   </div>
 
-  <div class="question" data-q="1">
-    <b>2. क्या कोई इच्छा भीतर चल रही है?</b>
-    <button class="option" data-score="2">हाँ</button>
-    <button class="option" data-score="1">स्पष्ट नहीं</button>
-    <button class="option" data-score="0">नहीं</button>
-  </div>
+  <script>
+    function calculateTime() {
+      const age = document.getElementById("age").value;
+      const result = document.getElementById("result");
 
-  <div class="question" data-q="2">
-    <b>3. क्या मन अभी शांत बैठ सकता है?</b>
-    <button class="option" data-score="2">नहीं</button>
-    <button class="option" data-score="1">कुछ देर</button>
-    <button class="option" data-score="0">हाँ</button>
-  </div>
+      if (age === "" || age <= 0 || age > 100) {
+        result.innerHTML = "";
+        return;
+      }
 
-  <button class="main-btn" onclick="goToSpin()">Spin Wheel</button>
-</div>
+      const lifeExpectancy = 75;
+      const daysLeft = Math.max((lifeExpectancy - age) * 365, 0);
 
-<!-- SCREEN 2 -->
-<div id="screen2" class="screen">
-  <h2>Thought Spin</h2>
-
-  <div class="wheel-container">
-    <div class="pointer"></div>
-    <div id="wheel" class="wheel"></div>
-  </div>
-
-  <button class="main-btn" onclick="spin()">घुमाएँ</button>
-
-  <div id="state" class="result"></div>
-  <p id="line" class="small"></p>
-
-  <button class="main-btn" onclick="resetApp()">फिर से जाँचें</button>
-</div>
-
-<script>
-const answers=[null,null,null];
-
-const states=[
-  ["शांति / साक्षी","कुछ पकड़ में नहीं है"],
-  ["स्मृति / आदत","मन अतीत की लय में है"],
-  ["इच्छा / द्वंद्व","कुछ चाह या निर्णय चल रहा है"],
-  ["चिन्ता / भय","मन किसी विचार से जकड़ा है"]
-];
-
-document.querySelectorAll(".option").forEach(btn=>{
-  btn.onclick=function(){
-    const q=this.parentElement.dataset.q;
-    answers[q]=Number(this.dataset.score);
-    this.parentElement.querySelectorAll(".option")
-      .forEach(b=>b.classList.remove("active"));
-    this.classList.add("active");
-  }
-});
-
-let finalIndex=0;
-
-function goToSpin(){
-  if(answers.includes(null)){
-    alert("तीनों सवालों के उत्तर दें");
-    return;
-  }
-  const total=answers.reduce((a,b)=>a+b,0);
-  if(total===0) finalIndex=0;
-  else if(total<=2) finalIndex=1;
-  else if(total<=4) finalIndex=2;
-  else finalIndex=3;
-
-  screen1.classList.remove("active");
-  screen2.classList.add("active");
-}
-
-function spin(){
-  const wheel=document.getElementById("wheel");
-  const angle=360*3 + finalIndex*45;
-  wheel.classList.add("glow");
-  wheel.style.transform=`rotate(${angle}deg)`;
-
-  setTimeout(()=>{
-    state.innerText=states[finalIndex][0];
-    line.innerText=states[finalIndex][1];
-    wheel.classList.remove("glow");
-    navigator.vibrate?.(40);
-  },3000);
-}
-
-function resetApp(){
-  location.reload();
-}
-</script>
+      result.innerHTML = `
+        आपके पास अनुमानित<br>
+        <strong>${daysLeft.toLocaleString()}</strong><br>
+        दिन शेष हैं
+      `;
+    }
+  </script>
 
 </body>
 </html>
