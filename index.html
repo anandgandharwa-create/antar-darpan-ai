@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thought Meter Calculator</title>
+
 <style>
 body{
   font-family: system-ui, sans-serif;
@@ -12,81 +13,100 @@ body{
   margin:0;
   padding:20px;
 }
-h2{ text-align:center; }
-.question{
-  margin:20px 0;
-}
+
+.screen{ display:none; }
+.active{ display:block; }
+
+h2{text-align:center;}
+.small{opacity:.8;font-size:14px;text-align:center;}
+
+.question{margin:20px 0;}
 button.option{
-  display:block;
-  width:100%;
-  margin:8px 0;
-  padding:12px;
-  background:#222;
-  color:#fff;
-  border:1px solid #444;
-  border-radius:10px;
-  font-size:15px;
+  display:block;width:100%;margin:8px 0;padding:12px;
+  background:#222;color:#fff;border:1px solid #444;
+  border-radius:10px;font-size:15px;
 }
-button.option.active{
-  background:#fff;
-  color:#000;
+button.option.active{background:#fff;color:#000;}
+
+.main-btn{
+  margin-top:20px;width:100%;padding:14px;
+  font-size:16px;border:none;border-radius:20px;
 }
-#result{
-  margin-top:30px;
-  padding:20px;
-  border-radius:12px;
-  background:#111;
-  display:none;
-  text-align:center;
+
+/* ----- Meter ----- */
+.meter-box{
+  width:220px;height:220px;margin:20px auto;
+  border-radius:50%;
+  background:conic-gradient(
+    #2ecc71 0deg 90deg,
+    #f1c40f 90deg 180deg,
+    #e67e22 180deg 270deg,
+    #e74c3c 270deg 360deg
+  );
+  display:flex;align-items:center;justify-content:center;
 }
-.small{ opacity:0.8; font-size:14px; }
+.meter-inner{
+  width:160px;height:160px;border-radius:50%;
+  background:#0f1115;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;font-size:18px;
+}
+.result{text-align:center;margin-top:10px;font-size:20px;}
 </style>
 </head>
 
 <body>
 
-<h2>अपने आप से सच बोलें</h2>
-<p class="small" style="text-align:center">
-अगर उत्तर ईमानदार हैं, मीटर सही पढ़ेगा
-</p>
+<!-- SCREEN 1 : INPUT -->
+<div id="screen1" class="screen active">
+  <h2>अपने आप से सच बोलें</h2>
+  <p class="small">अगर उत्तर ईमानदार हैं, मीटर सही पढ़ेगा</p>
 
-<div class="question" data-q="0">
-  <b>1. क्या इस समय मन बेचैन है?</b>
-  <button class="option" data-score="2">हाँ, बहुत</button>
-  <button class="option" data-score="1">थोड़ा</button>
-  <button class="option" data-score="0">नहीं</button>
+  <div class="question" data-q="0">
+    <b>1. क्या मन बेचैन है?</b>
+    <button class="option" data-score="2">हाँ, बहुत</button>
+    <button class="option" data-score="1">थोड़ा</button>
+    <button class="option" data-score="0">नहीं</button>
+  </div>
+
+  <div class="question" data-q="1">
+    <b>2. क्या कोई इच्छा भीतर चल रही है?</b>
+    <button class="option" data-score="2">हाँ</button>
+    <button class="option" data-score="1">स्पष्ट नहीं</button>
+    <button class="option" data-score="0">नहीं</button>
+  </div>
+
+  <div class="question" data-q="2">
+    <b>3. क्या मन अभी शांत बैठ सकता है?</b>
+    <button class="option" data-score="2">नहीं</button>
+    <button class="option" data-score="1">कुछ देर</button>
+    <button class="option" data-score="0">हाँ</button>
+  </div>
+
+  <button class="main-btn" onclick="calculate()">मीटर देखें</button>
 </div>
 
-<div class="question" data-q="1">
-  <b>2. क्या कोई इच्छा भीतर चल रही है?</b>
-  <button class="option" data-score="2">हाँ</button>
-  <button class="option" data-score="1">स्पष्ट नहीं</button>
-  <button class="option" data-score="0">नहीं</button>
-</div>
+<!-- SCREEN 2 : RESULT -->
+<div id="screen2" class="screen">
+  <h2>Thought Meter</h2>
 
-<div class="question" data-q="2">
-  <b>3. क्या मन अभी शांत बैठ सकता है?</b>
-  <button class="option" data-score="2">नहीं</button>
-  <button class="option" data-score="1">कुछ देर</button>
-  <button class="option" data-score="0">हाँ</button>
-</div>
+  <div class="meter-box">
+    <div id="meterText" class="meter-inner">...</div>
+  </div>
 
-<button onclick="calculate()" style="margin-top:20px;width:100%;padding:14px;">
-मीटर देखें
-</button>
-
-<div id="result">
-  <h3 id="state"></h3>
+  <div id="state" class="result"></div>
   <p id="line" class="small"></p>
+
+  <button class="main-btn" onclick="reset()">फिर से जाँचें</button>
 </div>
 
 <script>
-const answers = [null,null,null];
+const answers=[null,null,null];
 
 document.querySelectorAll(".option").forEach(btn=>{
-  btn.onclick = function(){
-    const q = this.parentElement.dataset.q;
-    answers[q] = Number(this.dataset.score);
+  btn.onclick=function(){
+    const q=this.parentElement.dataset.q;
+    answers[q]=Number(this.dataset.score);
     this.parentElement.querySelectorAll(".option")
       .forEach(b=>b.classList.remove("active"));
     this.classList.add("active");
@@ -98,27 +118,39 @@ function calculate(){
     alert("तीनों सवालों के उत्तर दें");
     return;
   }
-  const total = answers.reduce((a,b)=>a+b,0);
+  const total=answers.reduce((a,b)=>a+b,0);
 
-  let state="", line="";
+  let state="",line="",center="";
   if(total>=5){
     state="चिन्ता / भय";
-    line="मन किसी विचार से पकड़ा हुआ है";
+    line="मन किसी विचार से जकड़ा हुआ है";
+    center="उच्च तनाव";
   }else if(total>=3){
     state="इच्छा / द्वंद्व";
     line="कुछ चाह या निर्णय चल रहा है";
+    center="मध्यम हलचल";
   }else if(total>=1){
     state="स्मृति / आदत";
     line="मन अतीत की लय में है";
+    center="हल्की गति";
   }else{
     state="शांति / साक्षी";
     line="कुछ पकड़ में नहीं है";
+    center="शून्य";
   }
 
-  document.getElementById("state").innerText = state;
-  document.getElementById("line").innerText = line;
-  document.getElementById("result").style.display="block";
+  document.getElementById("screen1").classList.remove("active");
+  document.getElementById("screen2").classList.add("active");
+
+  document.getElementById("state").innerText=state;
+  document.getElementById("line").innerText=line;
+  document.getElementById("meterText").innerText=center;
+
   navigator.vibrate?.(40);
+}
+
+function reset(){
+  location.reload();
 }
 </script>
 
