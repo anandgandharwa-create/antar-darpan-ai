@@ -10,7 +10,7 @@ body{
   margin:0;
   padding:16px;
   font-family: system-ui, sans-serif;
-  background: linear-gradient(180deg,#0b2c35,#0f3d4a,#0b2c35);
+  background: radial-gradient(circle at top,#2c5364,#0f2027 60%,#000814);
   color:#fff;
 }
 
@@ -19,7 +19,7 @@ body{
   max-width:480px;
   margin:0 auto;
 }
-.active{ display:block; }
+.active{display:block;}
 
 h2{text-align:center;}
 .small{
@@ -29,34 +29,47 @@ h2{text-align:center;}
 }
 
 .question{
-  background: linear-gradient(135deg,#264653,#1f3c44);
-  padding:18px;
-  margin:18px 0;
-  border-radius:18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  background: linear-gradient(180deg,#263238,#1b2328);
+  padding:20px;
+  margin:22px 0;
+  border-radius:20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.45);
 }
   .question b{
   font-size:18px;
   display:block;
-  margin-bottom:12px;
+  margin-bottom:14px;
+}
 }
 
 /* ===== BUTTON FIX ===== */
 .main-btn{
   width:100%;
-  max-width:420px;
-  margin:24px auto;
-  padding:16px;
+  margin:28px auto;
+  padding:20px;
   border:none;
-  border-radius:28px;
-  font-size:18px;
-  font-weight:600;
+  border-radius:40px;
+  font-size:20px;
+  font-weight:700;
   background: linear-gradient(90deg,#00f5d4,#4cc9f0);
   color:#000;
   display:block;
 }
+  button.option{
+  width:100%;
+  max-width:420px;
+  margin:12px auto;
+  padding:18px;
+  border:none;
+  border-radius:16px;
+  font-size:16px;
+  background: linear-gradient(90deg,#3a3a3a,#2b2b2b);
+  color:#fff;
+  display:block;
+  text-align:left;
+}
 button.option.active{
-  background: linear-gradient(90deg,#06d6a0,#4cc9f0);
+  background: linear-gradient(90deg,#0fb9b1,#20bf6b);
   color:#000;
   font-weight:600;
 }
