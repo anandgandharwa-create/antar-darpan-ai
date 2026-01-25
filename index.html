@@ -4,25 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thought Meter</title>
+
 <style>
 body{
   margin:0;
   font-family: system-ui, sans-serif;
-  background:#0f1115;
-  color:#eee;
+  background:#0e0e11;
+  color:#fff;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   height:100vh;
 }
+
 .screen{ display:none; text-align:center; }
 .active{ display:block; }
 
+button{
+  margin-top:30px;
+  padding:14px 28px;
+  font-size:16px;
+  border:none;
+  border-radius:25px;
+  background:#fff;
+  color:#000;
+  cursor:pointer;
+}
+
+/* ---------- Screen 1 ---------- */
 .meter{
   width:200px;
   height:200px;
-  border:6px solid #444;
   border-radius:50%;
+  border:6px solid #333;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -30,35 +44,56 @@ body{
   margin:auto;
 }
 
-button{
-  margin-top:30px;
-  padding:12px 24px;
-  font-size:16px;
-  border:none;
-  border-radius:20px;
-  background:#fff;
-  color:#000;
+/* ---------- Wheel ---------- */
+.wheel-container{
+  width:240px;
+  height:240px;
+  margin:auto;
+  position:relative;
 }
 
 .wheel{
-  width:220px;
-  height:220px;
+  width:100%;
+  height:100%;
   border-radius:50%;
-  border:6px solid #666;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  animation: spin 2s ease-out;
+  background:conic-gradient(
+    #ff3b3b 0deg 36deg,
+    #ff9f1c 36deg 72deg,
+    #ffe66d 72deg 108deg,
+    #4cd137 108deg 144deg,
+    #1dd1a1 144deg 180deg,
+    #54a0ff 180deg 216deg,
+    #5f27cd 216deg 252deg,
+    #341f97 252deg 288deg,
+    #c56cf0 288deg 324deg,
+    #ff6b81 324deg 360deg
+  );
+  animation: spin 3s ease-out forwards;
+}
+
+.pointer{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-bottom:20px solid #fff;
 }
 
 @keyframes spin{
   from{ transform:rotate(0deg); }
-  to{ transform:rotate(720deg); }
+  to{ transform:rotate(var(--spin-angle)); }
 }
 
+.result{
+  margin-top:20px;
+  font-size:22px;
+}
 .small{
-  margin-top:15px;
+  margin-top:10px;
   font-size:14px;
   opacity:0.8;
 }
@@ -71,18 +106,22 @@ button{
 <div id="screen1" class="screen active">
   <div class="meter">अभी मन की स्थिति</div>
   <p class="small">विचार को देखो</p>
-  <button onclick="spin()">Spin Wheel</button>
+  <button onclick="startSpin()">Spin Wheel</button>
 </div>
 
 <!-- Screen 2 -->
 <div id="screen2" class="screen">
-  <div id="result" class="wheel">...</div>
-  <p id="line" class="small"></p>
-  <button onclick="back()">फिर से देखें</button>
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel"></div>
+  </div>
+  <div id="result" class="result"></div>
+  <div id="line" class="small"></div>
+  <button onclick="reset()">फिर से देखें</button>
 </div>
 
 <script>
-const thoughts = [
+const states = [
   ["भय","जो डर रहा है, उसे देखो"],
   ["इच्छा","चाह आ रही है, तू नहीं"],
   ["क्रोध","ऊर्जा है, पहचान नहीं"],
@@ -95,21 +134,27 @@ const thoughts = [
   ["साक्षी","बस देखने वाला"]
 ];
 
-function spin(){
+function startSpin(){
   document.getElementById("screen1").classList.remove("active");
   document.getElementById("screen2").classList.add("active");
 
-  const pick = thoughts[Math.floor(Math.random()*thoughts.length)];
-  document.getElementById("result").innerText = pick[0];
-  document.getElementById("line").innerText = pick[1];
+  // ---- Conceptual logic (NOT random) ----
+  const seconds = new Date().getSeconds();     // 0–59
+  const index = Math.floor(seconds / 6);       // 10 states
+  const angle = 360 * 3 + index * 36;          // 3 full spins + segment
 
-  // Zero Quantum pause (silent gap)
-  navigator.vibrate?.(20);
+  const wheel = document.getElementById("wheel");
+  wheel.style.setProperty("--spin-angle", angle + "deg");
+
+  setTimeout(()=>{
+    document.getElementById("result").innerText = states[index][0];
+    document.getElementById("line").innerText = states[index][1];
+    navigator.vibrate?.(30); // Zero Quantum subtle cue
+  },3000);
 }
 
-function back(){
-  document.getElementById("screen2").classList.remove("active");
-  document.getElementById("screen1").classList.add("active");
+function reset(){
+  location.reload();
 }
 </script>
 
