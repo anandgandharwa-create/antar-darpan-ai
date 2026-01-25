@@ -6,10 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       height: 100vh;
-      background: radial-gradient(circle at top, #1b0033, #05010a);
+      background: radial-gradient(circle at top, #2a004f, #05010a);
       color: #ffffff;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
@@ -26,43 +30,42 @@
 
     .tagline {
       font-size: 16px;
-      color: #ff6ec7;
-      margin-bottom: 18px;
+      color: #ffd84d; /* YELLOW */
+      margin-bottom: 22px;
       letter-spacing: 0.4px;
     }
 
     h1 {
       font-size: 22px;
       font-weight: 500;
-      margin-bottom: 20px;
-      color: #ffffff;
+      margin-bottom: 18px;
     }
 
     input {
       width: 100%;
-      padding: 14px;
+      padding: 14px 16px;
       font-size: 18px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: none;
       outline: none;
       text-align: center;
-      background: #12001f;
+      background: #140022;
       color: #ffffff;
-      box-shadow: 0 0 12px rgba(255,110,199,0.3);
+      box-shadow: 0 0 18px rgba(255, 216, 77, 0.35);
     }
 
     .result {
-      margin-top: 26px;
+      margin-top: 28px;
       font-size: 22px;
       line-height: 1.5;
       color: #00ffd5;
-      min-height: 80px;
+      min-height: 84px;
     }
 
     .footer {
-      margin-top: 18px;
+      margin-top: 20px;
       font-size: 14px;
-      color: #bbbbbb;
+      color: #cccccc;
     }
   </style>
 </head>
@@ -76,11 +79,11 @@
 
     <h1>आपकी उम्र कितनी है?</h1>
 
-    <input 
-      type="number" 
-      id="age" 
-      placeholder="उम्र लिखें" 
-      oninput="calculateTime()" 
+    <input
+      type="number"
+      id="age"
+      placeholder="उम्र लिखें"
+      oninput="calculateTime()"
     />
 
     <div class="result" id="result"></div>
