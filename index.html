@@ -56,6 +56,17 @@ button.option.active{background:#fff;color:#000;}
     #c56cf0 315deg 360deg
   );
   transition: transform 3s ease-out;
+  .wheel{
+  /* existing styles */
+  border-radius:50%;
+  background: conic-gradient(...);
+  transition: transform 3s ease-out;
+
+ .wheel.glow{
+  box-shadow:
+    0 0 25px rgba(255,255,255,0.25),
+    0 0 55px rgba(255,255,255,0.15);
+}
 }
 
 .pointer{
@@ -166,12 +177,14 @@ function goToSpin(){
 function spin(){
   const wheel=document.getElementById("wheel");
  const angle = 360*3 + finalIndex*45;
+  wheel.classList.add("glow");
   wheel.style.transform=`rotate(${angle}deg)`;
 
   setTimeout(()=>{
     document.getElementById("state").innerText=states[finalIndex][0];
     document.getElementById("line").innerText=states[finalIndex][1];
     navigator.vibrate?.(40);
+    wheel.classList.remove("glow");
   },3000);
 }
 
