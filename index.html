@@ -62,10 +62,16 @@ button.option.active{background:#fff;color:#000;}
   background: conic-gradient(...);
   transition: transform 3s ease-out;
 
- .wheel.glow{
+.wheel{
+  transition:
+    transform 3s ease-out,
+    box-shadow 2.5s ease-out;
+}
+
+.wheel.glow{
   box-shadow:
-    0 0 25px rgba(255,255,255,0.25),
-    0 0 55px rgba(255,255,255,0.15);
+    0 0 28px rgba(255,255,255,0.25),
+    0 0 60px rgba(255,255,255,0.15);
 }
 }
 
