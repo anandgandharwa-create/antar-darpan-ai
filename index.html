@@ -1,127 +1,200 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <title>Time Cost</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>भाव-आवृत्ति गणक | Divine Access</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+body{
+    margin:0;
+    font-family:system-ui,sans-serif;
+    background:#0b0b0f;
+    color:#fff;
+}
+.container{
+    padding:20px;
+    max-width:420px;
+    margin:auto;
+}
+h1{
+    text-align:center;
+    font-size:22px;
+    color:#ffd369;
+}
+.card{
+    background:#15151c;
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:12px;
+    cursor:pointer;
+    border:1px solid #222;
+}
+.card:hover{background:#1f1f2b;}
+button{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    background:linear-gradient(135deg,#ffd369,#ff9f1c);
+    color:#000;
+    font-size:16px;
+    font-weight:bold;
+    margin-top:20px;
+}
+.result{display:none;}
+.label{
+    color:#aaa;
+    font-size:13px;
+}
+.value{
+    font-size:17px;
+    margin-bottom:12px;
+}
 
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #000000; /* AMOLED PURE BLACK */
-      color: #ffffff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .screen {
-      width: 100%;
-      max-width: 360px;
-      padding: 26px 22px;
-      text-align: center;
-    }
-
-    .tagline {
-      font-size: 16px;
-      color: #ffd84d; /* Yellow */
-      margin-bottom: 24px;
-      letter-spacing: 0.4px;
-      min-height: 40px;
-    }
-
-    h1 {
-      font-size: 22px;
-      font-weight: 500;
-      margin-bottom: 18px;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      font-size: 18px;
-      border-radius: 14px;
-      border: none;
-      outline: none;
-      text-align: center;
-      background: #050505;
-      color: #ffffff;
-      box-shadow: 0 0 16px rgba(255, 216, 77, 0.35);
-    }
-
-    .result {
-      margin-top: 28px;
-      font-size: 22px;
-      line-height: 1.5;
-      color: #00ffd5;
-      min-height: 84px;
-    }
-
-    .footer {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #aaaaaa;
-    }
-  </style>
+/* 🔮 Chakra Animation */
+.chakra-box{
+    display:flex;
+    justify-content:center;
+    margin:20px 0;
+}
+.chakra{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    animation:pulse 2.5s infinite;
+    box-shadow:0 0 20px currentColor;
+}
+@keyframes pulse{
+    0%{transform:scale(1);opacity:0.7;}
+    50%{transform:scale(1.15);opacity:1;}
+    100%{transform:scale(1);opacity:0.7;}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="screen">
-    <div class="tagline" id="tagline"></div>
+<!-- Screen 1 -->
+<div class="container" id="screen1">
+<h1>आपकी वर्तमान भाव-दशा</h1>
 
-    <h1>आपकी उम्र कितनी है?</h1>
+<div class="card" onclick="selectEmotion('भय')">भय 😟</div>
+<div class="card" onclick="selectEmotion('क्रोध')">क्रोध 😠</div>
+<div class="card" onclick="selectEmotion('दुख')">दुख 😔</div>
+<div class="card" onclick="selectEmotion('भ्रम')">भ्रम 😵</div>
+<div class="card" onclick="selectEmotion('तटस्थ')">तटस्थ 😐</div>
+<div class="card" onclick="selectEmotion('आशा')">आशा 🙂</div>
+<div class="card" onclick="selectEmotion('कृतज्ञता')">कृतज्ञता 🙏</div>
+<div class="card" onclick="selectEmotion('प्रेम')">प्रेम ❤️</div>
+</div>
 
-    <input
-      type="number"
-      id="age"
-      placeholder="उम्र लिखें"
-      oninput="calculateTime()"
-    />
+<!-- Screen 2 -->
+<div class="container result" id="screen2">
+<h1>आपकी भावात्मक आवृत्ति</h1>
 
-    <div class="result" id="result"></div>
+<div class="chakra-box">
+    <div class="chakra" id="chakraAnim"></div>
+</div>
 
-    <div class="footer">
-      आज का दिन किस पर खर्च करेंगे?
-    </div>
-  </div>
+<div class="label">चयनित भाव</div>
+<div class="value" id="emotion"></div>
 
-  <script>
-    // A/B TEST TAGLINES
-    const taglines = [
-      "आप समय नहीं मारते, समय आपको काटता है।",
-      "हर दिन कट रहा है - सवाल है, किसके लिए?",
-      "समय मुफ्त नहीं है, बस बिल बाद में आता है।"
-    ];
+<div class="label">आवृत्ति</div>
+<div class="value" id="frequency"></div>
 
-    document.getElementById("tagline").innerText =
-      taglines[Math.floor(Math.random() * taglines.length)];
+<div class="label">संबंधित चक्र</div>
+<div class="value" id="chakra"></div>
 
-    function calculateTime() {
-      const age = document.getElementById("age").value;
-      const result = document.getElementById("result");
+<div class="label">चेतना स्तर</div>
+<div class="value" id="level"></div>
 
-      if (age === "" || age <= 0 || age > 100) {
-        result.innerHTML = "";
-        return;
-      }
+<div class="label">Divine संकेत</div>
+<div class="value" id="message"></div>
 
-      const lifeExpectancy = 75;
-      const daysLeft = Math.max((lifeExpectancy - age) * 365, 0);
+<button onclick="goBack()">पुनः जाँच करें</button>
+</div>
 
-      result.innerHTML = `
-        आपके पास अनुमानित<br>
-        <strong>${daysLeft.toLocaleString()}</strong><br>
-        दिन शेष हैं
-      `;
-    }
-  </script>
+<script>
+const data={
+"भय":{
+freq:"80 Hz",
+chakra:"मूलाधार चक्र",
+color:"#ff3b3b",
+level:"अस्तित्व रक्षा",
+msg:"भय ऊर्जा को नीचे खींचता है। स्वयं को सुरक्षित अनुभव कराएँ।"
+},
+"क्रोध":{
+freq:"95 Hz",
+chakra:"स्वाधिष्ठान चक्र",
+color:"#ff7a18",
+level:"अशांत मन",
+msg:"क्रोध ऊर्जा को बिखेरता है। श्वास पर ध्यान दें।"
+},
+"दुख":{
+freq:"110 Hz",
+chakra:"मणिपुर चक्र",
+color:"#ffd369",
+level:"भावनात्मक बोझ",
+msg:"दुख स्वीकार से हल्का होता है।"
+},
+"भ्रम":{
+freq:"130 Hz",
+chakra:"मणिपुर / अनाहत",
+color:"#9acd32",
+level:"अस्थिर चेतना",
+msg:"भ्रम में निर्णय न लें। साक्षी बनें।"
+},
+"तटस्थ":{
+freq:"150 Hz",
+chakra:"अनाहत चक्र",
+color:"#00ffcc",
+level:"सामान्य चेतना",
+msg:"यह परिवर्तन का द्वार है।"
+},
+"आशा":{
+freq:"200 Hz",
+chakra:"विशुद्ध चक्र",
+color:"#4da6ff",
+level:"उर्ध्वगति",
+msg:"आशा ऊर्जा को ऊपर उठाती है।"
+},
+"कृतज्ञता":{
+freq:"300 Hz",
+chakra:"आज्ञा चक्र",
+color:"#8a2be2",
+level:"हृदय चेतना",
+msg:"कृतज्ञता चेतना का विस्तार करती है।"
+},
+"प्रेम":{
+freq:"420 Hz",
+chakra:"सहस्रार चक्र",
+color:"#ffffff",
+level:"दिव्य चेतना",
+msg:"प्रेम में पूर्ण समर्पण है।"
+}
+};
+
+function selectEmotion(e){
+document.getElementById("screen1").style.display="none";
+document.getElementById("screen2").style.display="block";
+
+document.getElementById("emotion").innerText=e;
+document.getElementById("frequency").innerText=data[e].freq;
+document.getElementById("chakra").innerText=data[e].chakra;
+document.getElementById("level").innerText=data[e].level;
+document.getElementById("message").innerText=data[e].msg;
+
+const ch=document.getElementById("chakraAnim");
+ch.style.background=data[e].color;
+ch.style.color=data[e].color;
+}
+
+function goBack(){
+document.getElementById("screen2").style.display="none";
+document.getElementById("screen1").style.display="block";
+}
+</script>
 
 </body>
 </html>
