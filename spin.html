@@ -51,22 +51,29 @@ let spinning = false;
 function startSpin(){
   if(spinning) return;
   spinning = true;
-  speed = 45;
 
   const wheel = document.getElementById("wheel");
+  let start = Date.now();
+  let duration = 6500; // 👉 5.5 सेकंड
+  let startSpeed = 50; // तेज़ शुरुआत
 
   const interval = setInterval(()=>{
+    let elapsed = Date.now() - start;
+    let progress = elapsed / duration;
+
+    // ease-out effect
+    let speed = startSpeed * (1 - progress);
     angle += speed;
     wheel.style.transform = "rotate(" + angle + "deg)";
-    speed *= 0.985;   // धीरे-धीरे रुकना
 
-    if(speed < 0.3){
+    if(elapsed >= duration){
       clearInterval(interval);
       spinning = false;
-      setTimeout(goNext, 600);
+      setTimeout(goNext, 700);
     }
   }, 30);
 }
+
 
 function goNext(){
   window.location.href = "meter.html";
