@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Divine Access | सत्य-जागरूकता</title>
+<title>Divine Access</title>
 
 <style>
 body{
@@ -11,114 +11,93 @@ margin:0;
 font-family:system-ui,sans-serif;
 background:#0b0b0f;
 color:#fff;
+text-align:center;
 }
 .container{
 max-width:420px;
 margin:auto;
 padding:20px;
-text-align:center;
-}
-  .half-meter{
-  position: relative;
-  width: 260px;
-  height: 130px;
-  margin: 30px auto;
-  overflow: hidden;
 }
 
-.arc{
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: conic-gradient(
-    #ff2e2e,
-    #ff8c1a,
-    #ffd369,
-    #00ffcc,
-    #8a2be2
-  );
+h1{
+color:#ffd369;
+font-size:26px;
+margin-bottom:6px;
+}
+.sub{
+color:#aaa;
+font-size:15px;
+margin-bottom:10px;
 }
 
-.needle{
-  position:absolute;
-  width:4px;
-  height:120px;
-  background:#fff;
-  bottom:0;
-  left:50%;
-  transform-origin: bottom;
-  transform: rotate(-90deg);
-  border-radius:2px;
-  transition: transform 1s ease;
-}
-h1{color:#ffd369;font-size:22px;}
-.sub{color:#aaa;font-size:14px;margin-bottom:20px;}
-
-.option{
-background:#15151c;
-border:1px solid #222;
-border-radius:14px;
-padding:14px;
-margin-bottom:12px;
-cursor:pointer;
-text-align:left;
-}
-.option:hover{background:#1f1f2b;}
-
-.screen{display:none;}
-.screen.active{display:block;}
-
-/* 🎮 CLEAN SPIN SCREEN */
-.spin-wrapper{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-height:65vh;
+/* 🔮 HALF CIRCLE METER */
+.meter-wrap{
+position:relative;
+width:280px;
+height:140px;
+margin:25px auto 10px;
+overflow:hidden;
 }
 
-.spin-wheel{
-width:260px;
-height:260px;
+.meter-arc{
+width:280px;
+height:280px;
 border-radius:50%;
 background:conic-gradient(
-red, orange, yellow, lime, cyan, blue, violet, red
+#ff2e2e 0deg,
+#ff8c1a 45deg,
+#ffd369 90deg,
+#00ffcc 135deg,
+#8a2be2 180deg
 );
-box-shadow:
-0 0 25px rgba(255,255,255,0.25),
-0 0 60px rgba(0,255,255,0.25);
-transition:transform 0.2s linear;
 }
 
-/* Spin button */
-.spin-btn{
-margin-top:30px;
-padding:14px 28px;
-border-radius:30px;
-border:none;
-background:linear-gradient(135deg,#ffd369,#ff9f1c);
-color:#000;
-font-size:18px;
-font-weight:bold;
+.meter-center{
+position:absolute;
+width:200px;
+height:200px;
+background:#0b0b0f;
+border-radius:50%;
+top:40px;
+left:40px;
 }
 
-/* 📊 RESULT */
-.meter-box{
-height:220px;
-display:flex;
-align-items:flex-end;
-justify-content:center;
-margin:30px 0;
+/* Needle */
+.needle{
+position:absolute;
+width:4px;
+height:120px;
+background:#fff;
+bottom:0;
+left:50%;
+transform-origin: bottom;
+transform: rotate(-90deg);
+border-radius:2px;
+transition: transform 1.4s cubic-bezier(.25,.8,.25,1);
 }
-.meter{
-width:120px;
-border-radius:20px;
-transition:all 1s ease;
-}
-.level{font-size:20px;margin-top:10px;}
-.insight{font-size:15px;color:#aaa;margin-top:8px;}
 
-button.reset{
+.needle-dot{
+position:absolute;
+width:14px;
+height:14px;
+background:#fff;
+border-radius:50%;
+bottom:-7px;
+left:calc(50% - 7px);
+}
+
+/* Result text */
+.level{
+font-size:22px;
+margin-top:15px;
+}
+.insight{
+font-size:15px;
+color:#aaa;
+margin-top:6px;
+}
+
+button{
 width:100%;
 padding:14px;
 border-radius:14px;
@@ -136,113 +115,48 @@ margin-top:20px;
 
 <h1>Divine Access</h1>
 <div class="sub">सत्य के प्रति आपकी जागरूकता</div>
-<div class="half-meter">
-  <div class="arc"></div>
+
+<!-- METER -->
+<div class="meter-wrap">
+  <div class="meter-arc"></div>
+  <div class="meter-center"></div>
   <div class="needle" id="needle"></div>
+  <div class="needle-dot"></div>
 </div>
 
-<!-- SCREEN 1 -->
-<div id="screen1" class="screen active">
-<p>आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
-क्या सबसे अधिक सटीक है?</p>
-
-<div class="option" onclick="choose(1)">संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।</div>
-<div class="option" onclick="choose(2)">संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।</div>
-<div class="option" onclick="choose(3)">संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।</div>
-<div class="option" onclick="choose(4)">संसार एक अनुभव है, मैं इसका साक्षी हूँ।</div>
-<div class="option" onclick="choose(5)">संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।</div>
+<div class="level" id="levelText">सत्य के निकट</div>
+<div class="insight" id="insightText">
+जीवन चेतना में घटित हो रहा है।
 </div>
 
-<!-- SCREEN 2 : CLEAN SPIN -->
-<div id="screen2" class="screen">
-<div class="spin-wrapper">
-<div class="spin-wheel" id="wheel"></div>
-<button class="spin-btn" onclick="startSpin()">TAP करें</button>
-</div>
-</div>
-
-<!-- SCREEN 3 : RESULT -->
-<div id="screen3" class="screen">
-
-<div class="meter-box">
-<div class="meter" id="meterBar"></div>
-</div>
-
-<div class="level" id="levelText"></div>
-<div class="insight" id="insightText"></div>
-
-<button class="reset" onclick="reset()">पुनः अनुभव करें</button>
-</div>
+<button onclick="demo()">डेमो घुमाएँ</button>
 
 </div>
 
 <script>
-const data={
-1:{h:180,c:"#ff2e2e",t:"भौतिक दृष्टि",i:"दृष्टि अभी बाहरी संसार में केंद्रित है।"},
-2:{h:150,c:"#ff8c1a",t:"कर्म-बोध",i:"उत्तरदायित्व का बोध है।"},
-3:{h:120,c:"#ffd369",t:"विवेक की शुरुआत",i:"अस्थिरता को पहचाना जा रहा है।"},
-4:{h:80,c:"#00ffcc",t:"साक्षी चेतना",i:"अनुभवों से दूरी बन रही है।"},
-5:{h:40,c:"#8a2be2",t:"सत्य के निकट",i:"जीवन चेतना में घटित हो रहा है।"}
-};
-
-let chosen=1;
-let angle=0;
-let speed=0;
-let spinning=false;
-
-function choose(l){
-chosen=l;
-document.getElementById("screen1").classList.remove("active");
-document.getElementById("screen2").classList.add("active");
-}
-
-function startSpin(){
-if(spinning) return;
-spinning=true;
-speed=28;
-
-const wheel=document.getElementById("wheel");
-const interval=setInterval(()=>{
-angle+=speed;
-wheel.style.transform=`rotate(${angle}deg)`;
-speed*=0.965;
-
-if(speed<0.6){
-clearInterval(interval);
-spinning=false;
-setTimeout(showResult,500);
-}
-},30);
-}
-
-function showResult(){
-document.getElementById("screen2").classList.remove("active");
-document.getElementById("screen3").classList.add("active");
-
-const m=document.getElementById("meterBar");
-m.style.height=data[chosen].h+"px";
-m.style.background=data[chosen].c;
-
-document.getElementById("levelText").innerText=data[chosen].t;
-document.getElementById("insightText").innerText=data[chosen].i;
-}
-// angle: -90 (left) to +90 (right)
+// 1 से 5 तक level
 function setMeter(level){
-  const angleMap={
-    1:-80,
-    2:-40,
-    3:0,
-    4:40,
-    5:80
-  };
-  document.getElementById("needle").style.transform =
-    `rotate(${angleMap[level]}deg)`;
+const angles={
+1:-80,
+2:-40,
+3:0,
+4:40,
+5:80
+};
+document.getElementById("needle").style.transform=
+`rotate(${angles[level]}deg)`;
 }
 
-function reset(){
-document.getElementById("screen3").classList.remove("active");
-document.getElementById("screen1").classList.add("active");
+// Demo only (आप इसे result logic से जोड़ देंगे)
+let demoLevel=1;
+function demo(){
+setMeter(demoLevel);
+demoLevel++;
+if(demoLevel>5) demoLevel=1;
 }
+
+// Initial
+setTimeout(()=>setMeter(4),500);
 </script>
 
 </body>
