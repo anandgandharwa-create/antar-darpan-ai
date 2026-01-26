@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Response Resonance Analyzer</title>
+<title>Inner Response Energy Test</title>
 
 <style>
 body{
@@ -33,7 +33,6 @@ border-radius:14px;
 padding:14px;
 margin-bottom:12px;
 cursor:pointer;
-text-align:center;
 }
 .option:hover{
 background:#1f1f2b;
@@ -44,18 +43,6 @@ display:none;
 text-align:center;
 }
 
-.energy{
-font-size:22px;
-margin-top:15px;
-}
-
-.insight{
-color:#aaa;
-font-size:15px;
-margin-top:10px;
-}
-
-/* Chakra Animation */
 .chakra-box{
 display:flex;
 justify-content:center;
@@ -73,6 +60,16 @@ box-shadow:0 0 30px currentColor;
 0%{transform:scale(1);opacity:0.7;}
 50%{transform:scale(1.15);opacity:1;}
 100%{transform:scale(1);opacity:0.7;}
+}
+
+.energy{
+font-size:22px;
+margin-top:15px;
+}
+.insight{
+color:#aaa;
+font-size:15px;
+margin-top:10px;
 }
 
 button{
@@ -93,22 +90,19 @@ margin-top:20px;
 
 <div class="container">
 
-<h1>Response Resonance Analyzer</h1>
+<h1>Response Energy Test</h1>
 
-<!-- TEST SCREEN -->
+<!-- QUESTION SCREEN -->
 <div id="test">
 <div class="question" id="questionText"></div>
-
-<div class="option" onclick="answer()">ठीक है</div>
-<div class="option" onclick="answer()">सम्भव है</div>
-<div class="option" onclick="answer()">देखते हैं</div>
+<div id="options"></div>
 </div>
 
 <!-- RESULT SCREEN -->
 <div class="result" id="result">
 
 <div class="chakra-box">
-<div class="chakra" id="chakraCircle"></div>
+<div class="chakra" id="energyCircle"></div>
 </div>
 
 <div class="energy" id="energyState"></div>
@@ -121,11 +115,26 @@ margin-top:20px;
 
 <script>
 const questions = [
-"जब कोई अचानक आपकी बात काट दे…",
-"अगर आपकी योजना बिना बताए बदल जाए…",
-"कोई आपको उत्तर देने में देर कर दे…",
-"अचानक अकेलापन महसूस हो जाए…",
-"कोई काम अधूरा रह जाए…"
+{
+q: "जब कोई अचानक आपकी बात काट दे…",
+o: ["चुप हो जाना", "बात आगे बढ़ाना", "ध्यान न देना"]
+},
+{
+q: "अगर आपकी योजना बिना बताए बदल जाए…",
+o: ["स्वीकार कर लेना", "थोड़ा असहज होना", "रुककर सोचना"]
+},
+{
+q: "कोई आपको उत्तर देने में देर कर दे…",
+o: ["प्रतीक्षा करना", "दूसरे काम में लग जाना", "मन ही मन सोचना"]
+},
+{
+q: "अचानक अकेलापन महसूस हो जाए…",
+o: ["शांत बैठना", "फोन देखना", "टहलना"]
+},
+{
+q: "कोई काम अधूरा रह जाए…",
+o: ["उसे छोड़ देना", "बाद में करने का सोचना", "अभी निपटाने की इच्छा"]
+}
 ];
 
 let index = 0;
@@ -133,7 +142,18 @@ let times = [];
 let startTime = 0;
 
 function showQuestion(){
-document.getElementById("questionText").innerText = questions[index];
+document.getElementById("questionText").innerText = questions[index].q;
+const optDiv = document.getElementById("options");
+optDiv.innerHTML = "";
+
+questions[index].o.forEach(opt=>{
+const d = document.createElement("div");
+d.className = "option";
+d.innerText = opt;
+d.onclick = answer;
+optDiv.appendChild(d);
+});
+
 startTime = Date.now();
 }
 
@@ -156,40 +176,40 @@ document.getElementById("result").style.display = "block";
 
 let avg = times.reduce((a,b)=>a+b,0) / times.length;
 
-let energy="", insight="", chakraColor="";
+let energy="", insight="", color="";
 
 if(avg < 1.2){
 energy = "🔴 मन अत्यधिक प्रतिक्रियाशील";
-insight = "उत्तर बहुत तेज़ हैं। मन चेतना से आगे चल रहा है।";
-chakraColor = "#ff2e2e";
+insight = "आप बहुत तेज़ उत्तर दे रहे हैं। मन पहले प्रतिक्रिया कर रहा है।";
+color = "#ff2e2e";
 }
-else if(avg >= 1.2 && avg <= 2.5){
+else if(avg <= 2.5){
 energy = "🟠 आंतरिक अस्थिरता";
 insight = "मन और सजगता के बीच खिंचाव है।";
-chakraColor = "#ff8c1a";
+color = "#ff8c1a";
 }
-else if(avg > 2.5 && avg <= 3.5){
+else if(avg <= 3.5){
 energy = "🟡 संतुलन की अवस्था";
-insight = "आप सजग हैं, ऊर्जा स्थिर हो रही है।";
-chakraColor = "#ffd369";
+insight = "आप जागरूक हैं, ऊर्जा स्थिर हो रही है।";
+color = "#ffd369";
 }
-else if(avg > 3.5 && avg <= 4.5){
-energy = "🟢 सकारात्मक और शांत ऊर्जा";
-insight = "उत्तर शांति से दिए जा रहे हैं।";
-chakraColor = "#00ffcc";
+else if(avg <= 4.5){
+energy = "🟢 शांत और सकारात्मक ऊर्जा";
+insight = "आप शांति से उत्तर दे रहे हैं।";
+color = "#00ffcc";
 }
 else{
-energy = "🟣 गहन आंतरिक शांति";
-insight = "चेतना सक्रिय है, मन धीमा हो चुका है।";
-chakraColor = "#8a2be2";
+energy = "🟣 गहन आंतरिक स्थिरता";
+insight = "मन धीमा है और चेतना सक्रिय।";
+color = "#8a2be2";
 }
 
 document.getElementById("energyState").innerText = energy;
 document.getElementById("insightText").innerText = insight;
 
-const circle = document.getElementById("chakraCircle");
-circle.style.background = chakraColor;
-circle.style.color = chakraColor;
+const circle = document.getElementById("energyCircle");
+circle.style.background = color;
+circle.style.color = color;
 }
 
 function restart(){
