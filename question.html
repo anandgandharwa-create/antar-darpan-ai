@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divine Access | Question</title>
+</head>
+
+<body style="
+margin:0;
+font-family:system-ui,sans-serif;
+background:#0b0b0f;
+color:#ffffff;
+text-align:center;
+padding:20px;
+">
+
+<h2 style="color:#ffd369;">Divine Access</h2>
+
+<p style="font-size:18px;margin:30px 0;">
+आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
+क्या सबसे अधिक सटीक है?
+</p>
+
+<div style="text-align:left;max-width:420px;margin:auto;">
+
+<button onclick="choose(1)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
+</button>
+
+<button onclick="choose(2)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
+</button>
+
+<button onclick="choose(3)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
+</button>
+
+<button onclick="choose(4)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+संसार एक अनुभव है, मैं इसका साक्षी हूँ।
+</button>
+
+<button onclick="choose(5)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
+</button>
+
+</div>
+
+<script>
+function choose(level){
+  localStorage.setItem("truthLevel", level);
+  window.location.href = "spin.html";
+}
+</script>
+
+</body>
+</html>
