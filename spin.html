@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divine Access | Spin</title>
+</head>
+
+<body style="
+margin:0;
+font-family:system-ui,sans-serif;
+background:#0b0b0f;
+color:#ffffff;
+text-align:center;
+padding-top:60px;
+">
+
+<h2 style="color:#ffd369;">Divine Access</h2>
+<p style="color:#aaa;">ऊर्जा संरेखित हो रही है</p>
+
+<!-- SPIN WHEEL -->
+<div id="wheel" style="
+width:220px;
+height:220px;
+margin:40px auto;
+border-radius:50%;
+background:conic-gradient(
+red, orange, yellow, green, cyan, blue, violet, red
+);
+box-shadow:0 0 30px rgba(255,255,255,0.3);
+">
+</div>
+
+<!-- BUTTON -->
+<button onclick="startSpin()" style="
+padding:16px 32px;
+border-radius:30px;
+border:none;
+background:#ffd369;
+font-size:18px;
+font-weight:bold;
+">
+TAP करें
+</button>
+
+<script>
+let angle = 0;
+let speed = 0;
+let spinning = false;
+
+function startSpin(){
+  if(spinning) return;
+  spinning = true;
+  speed = 25;
+
+  const wheel = document.getElementById("wheel");
+
+  const interval = setInterval(()=>{
+    angle += speed;
+    wheel.style.transform = "rotate(" + angle + "deg)";
+    speed *= 0.96;   // धीरे-धीरे रुकना
+
+    if(speed < 0.5){
+      clearInterval(interval);
+      spinning = false;
+      setTimeout(goNext, 600);
+    }
+  }, 30);
+}
+
+function goNext(){
+  window.location.href = "meter.html";
+}
+</script>
+
+</body>
+</html>
