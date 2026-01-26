@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divine Access | Result</title>
+</head>
+
+<body style="
+margin:0;
+font-family:system-ui,sans-serif;
+background:#0b0b0f;
+color:#ffffff;
+text-align:center;
+padding:20px;
+">
+
+<h2 style="color:#ffd369;margin-bottom:5px;">Divine Access</h2>
+<p style="color:#aaa;margin-top:0;">सत्य के प्रति आपकी जागरूकता</p>
+
+<!-- HALF CIRCLE METER -->
+<div style="
+position:relative;
+width:280px;
+height:140px;
+margin:30px auto;
+overflow:hidden;
+">
+
+  <!-- COLOURED ARC -->
+  <div style="
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  background:conic-gradient(
+    #ff2e2e 0deg,
+    #ff8c1a 45deg,
+    #ffd369 90deg,
+    #00ffcc 135deg,
+    #8a2be2 180deg
+  );
+  "></div>
+
+  <!-- INNER COVER -->
+  <div style="
+  position:absolute;
+  width:200px;
+  height:200px;
+  background:#0b0b0f;
+  border-radius:50%;
+  top:40px;
+  left:40px;
+  "></div>
+
+  <!-- NEEDLE -->
+  <div id="needle" style="
+  position:absolute;
+  width:4px;
+  height:120px;
+  background:#ffffff;
+  bottom:0;
+  left:50%;
+  transform-origin:bottom;
+  transform:rotate(-90deg);
+  border-radius:2px;
+  transition:transform 1.4s ease;
+  "></div>
+
+  <!-- NEEDLE DOT -->
+  <div style="
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#ffffff;
+  border-radius:50%;
+  bottom:-7px;
+  left:calc(50% - 7px);
+  "></div>
+
+</div>
+
+<!-- RESULT TEXT -->
+<h3 id="levelText"></h3>
+<p id="insightText" style="color:#aaa;"></p>
+
+<button onclick="restart()" style="
+margin-top:30px;
+padding:14px 30px;
+border-radius:30px;
+border:none;
+background:#222;
+color:#fff;
+font-size:16px;
+">
+पुनः अनुभव करें
+</button>
+
+<script>
+// level 1–5 angle map
+const angleMap = {
+  1: -80,
+  2: -40,
+  3: 0,
+  4: 40,
+  5: 80
+};
+
+const textMap = {
+  1: "भौतिक दृष्टि",
+  2: "कर्म-बोध",
+  3: "विवेक की शुरुआत",
+  4: "साक्षी भाव",
+  5: "सत्य के निकट"
+};
+
+const insightMap = {
+  1: "दृष्टि अभी बाहरी संसार में केंद्रित है।",
+  2: "उत्तरदायित्व का बोध है, पर सीमाएँ बनी हुई हैं।",
+  3: "परिवर्तनशीलता की पहचान हो रही है।",
+  4: "आप अनुभवों को देखने लगे हैं।",
+  5: "जीवन चेतना में घटित हो रहा है।"
+};
+
+// LOAD RESULT
+const level = localStorage.getItem("truthLevel") || 3;
+
+setTimeout(()=>{
+  document.getElementById("needle").style.transform =
+    "rotate(" + angleMap[level] + "deg)";
+  document.getElementById("levelText").innerText = textMap[level];
+  document.getElementById("insightText").innerText = insightMap[level];
+}, 400);
+
+function restart(){
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
