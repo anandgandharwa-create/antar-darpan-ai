@@ -35,25 +35,31 @@ text-align:left;
 .screen{display:none;}
 .screen.active{display:block;}
 
-/* 🌈 Spin Wheel */
-.spin-box{
+/* 🎮 GAME SPIN */
+.spin-area{
 height:60vh;
 display:flex;
+flex-direction:column;
 justify-content:center;
 align-items:center;
-background:radial-gradient(circle,
-red,orange,yellow,green,cyan,blue,violet);
+background:radial-gradient(circle at center,
+#ff0000,#ff7f00,#ffff00,#00ff00,#00ffff,#0000ff,#8b00ff);
+border-radius:20px;
 }
-.wheel{
-width:140px;
-height:140px;
+.spin-wheel{
+width:160px;
+height:160px;
 border-radius:50%;
-border:10px solid rgba(255,255,255,0.4);
-animation:spin 1.2s linear infinite;
+background:conic-gradient(
+red,orange,yellow,green,cyan,blue,violet,red
+);
+box-shadow:0 0 30px rgba(255,255,255,0.4);
 }
-@keyframes spin{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
+.tap-text{
+margin-top:20px;
+font-size:18px;
+font-weight:bold;
+color:#000;
 }
 
 /* 📊 Meter */
@@ -114,12 +120,12 @@ font-weight:bold;
 </div>
 </div>
 
-<!-- SCREEN 2 : SPIN -->
+<!-- SCREEN 2 : GAME SPIN -->
 <div id="screen2" class="screen">
-<div class="spin-box">
-<div class="wheel"></div>
+<div class="spin-area" onclick="startSpin()">
+<div class="spin-wheel" id="wheel"></div>
+<div class="tap-text">TAP करें</div>
 </div>
-<p>ऊर्जा संरेखित हो रही है…</p>
 </div>
 
 <!-- SCREEN 3 : RESULT -->
@@ -147,13 +153,33 @@ const data={
 };
 
 let chosen=1;
+let spinning=false;
+let angle=0;
+let speed=0;
 
 function choose(l){
 chosen=l;
 document.getElementById("screen1").classList.remove("active");
 document.getElementById("screen2").classList.add("active");
+}
 
-setTimeout(showResult,2000);
+function startSpin(){
+if(spinning) return;
+spinning=true;
+speed=25;
+
+const wheel=document.getElementById("wheel");
+const interval=setInterval(()=>{
+angle+=speed;
+wheel.style.transform="rotate("+angle+"deg)";
+speed*=0.97;   // धीरे-धीरे slowdown
+
+if(speed<0.5){
+clearInterval(interval);
+spinning=false;
+setTimeout(showResult,500);
+}
+},30);
 }
 
 function showResult(){
