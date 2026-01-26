@@ -35,34 +35,41 @@ text-align:left;
 .screen{display:none;}
 .screen.active{display:block;}
 
-/* 🎮 GAME SPIN */
-.spin-area{
-height:60vh;
+/* 🎮 CLEAN SPIN SCREEN */
+.spin-wrapper{
 display:flex;
 flex-direction:column;
-justify-content:center;
 align-items:center;
-background:radial-gradient(circle at center,
-#ff0000,#ff7f00,#ffff00,#00ff00,#00ffff,#0000ff,#8b00ff);
-border-radius:20px;
-}
-.spin-wheel{
-width:160px;
-height:160px;
-border-radius:50%;
-background:conic-gradient(
-red,orange,yellow,green,cyan,blue,violet,red
-);
-box-shadow:0 0 30px rgba(255,255,255,0.4);
-}
-.tap-text{
-margin-top:20px;
-font-size:18px;
-font-weight:bold;
-color:#000;
+justify-content:center;
+height:65vh;
 }
 
-/* 📊 Meter */
+.spin-wheel{
+width:260px;
+height:260px;
+border-radius:50%;
+background:conic-gradient(
+red, orange, yellow, lime, cyan, blue, violet, red
+);
+box-shadow:
+0 0 25px rgba(255,255,255,0.25),
+0 0 60px rgba(0,255,255,0.25);
+transition:transform 0.2s linear;
+}
+
+/* Spin button */
+.spin-btn{
+margin-top:30px;
+padding:14px 28px;
+border-radius:30px;
+border:none;
+background:linear-gradient(135deg,#ffd369,#ff9f1c);
+color:#000;
+font-size:18px;
+font-weight:bold;
+}
+
+/* 📊 RESULT */
 .meter-box{
 height:220px;
 display:flex;
@@ -75,19 +82,18 @@ width:120px;
 border-radius:20px;
 transition:all 1s ease;
 }
+.level{font-size:20px;margin-top:10px;}
+.insight{font-size:15px;color:#aaa;margin-top:8px;}
 
-button{
+button.reset{
 width:100%;
 padding:14px;
 border-radius:14px;
 border:none;
-background:linear-gradient(135deg,#ffd369,#ff9f1c);
-color:#000;
-font-size:16px;
-font-weight:bold;
+background:#222;
+color:#fff;
+margin-top:20px;
 }
-.level{font-size:20px;margin-top:10px;}
-.insight{font-size:15px;color:#aaa;margin-top:8px;}
 </style>
 </head>
 
@@ -103,28 +109,18 @@ font-weight:bold;
 <p>आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
 क्या सबसे अधिक सटीक है?</p>
 
-<div class="option" onclick="choose(1)">
-संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
-</div>
-<div class="option" onclick="choose(2)">
-संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
-</div>
-<div class="option" onclick="choose(3)">
-संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
-</div>
-<div class="option" onclick="choose(4)">
-संसार एक अनुभव है, मैं इसका साक्षी हूँ।
-</div>
-<div class="option" onclick="choose(5)">
-संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
-</div>
+<div class="option" onclick="choose(1)">संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।</div>
+<div class="option" onclick="choose(2)">संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।</div>
+<div class="option" onclick="choose(3)">संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।</div>
+<div class="option" onclick="choose(4)">संसार एक अनुभव है, मैं इसका साक्षी हूँ।</div>
+<div class="option" onclick="choose(5)">संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।</div>
 </div>
 
-<!-- SCREEN 2 : GAME SPIN -->
+<!-- SCREEN 2 : CLEAN SPIN -->
 <div id="screen2" class="screen">
-<div class="spin-area" onclick="startSpin()">
+<div class="spin-wrapper">
 <div class="spin-wheel" id="wheel"></div>
-<div class="tap-text">TAP करें</div>
+<button class="spin-btn" onclick="startSpin()">TAP करें</button>
 </div>
 </div>
 
@@ -138,24 +134,24 @@ font-weight:bold;
 <div class="level" id="levelText"></div>
 <div class="insight" id="insightText"></div>
 
-<button onclick="reset()">पुनः अनुभव करें</button>
+<button class="reset" onclick="reset()">पुनः अनुभव करें</button>
 </div>
 
 </div>
 
 <script>
 const data={
-1:{h:180,c:"#ff2e2e",t:"भौतिक दृष्टि",i:"दृष्टि अभी बाहरी संसार में अटकी है।"},
-2:{h:150,c:"#ff8c1a",t:"कर्म-बोध",i:"उत्तरदायित्व दिख रहा है, पर पूर्ण स्वतंत्रता नहीं।"},
-3:{h:120,c:"#ffd369",t:"विवेक की शुरुआत",i:"अस्थिरता की पहचान हो रही है।"},
+1:{h:180,c:"#ff2e2e",t:"भौतिक दृष्टि",i:"दृष्टि अभी बाहरी संसार में केंद्रित है।"},
+2:{h:150,c:"#ff8c1a",t:"कर्म-बोध",i:"उत्तरदायित्व का बोध है।"},
+3:{h:120,c:"#ffd369",t:"विवेक की शुरुआत",i:"अस्थिरता को पहचाना जा रहा है।"},
 4:{h:80,c:"#00ffcc",t:"साक्षी चेतना",i:"अनुभवों से दूरी बन रही है।"},
-5:{h:40,c:"#8a2be2",t:"सत्य के निकट",i:"जीवन चेतना में विलीन प्रतीत होता है।"}
+5:{h:40,c:"#8a2be2",t:"सत्य के निकट",i:"जीवन चेतना में घटित हो रहा है।"}
 };
 
 let chosen=1;
-let spinning=false;
 let angle=0;
 let speed=0;
+let spinning=false;
 
 function choose(l){
 chosen=l;
@@ -166,15 +162,15 @@ document.getElementById("screen2").classList.add("active");
 function startSpin(){
 if(spinning) return;
 spinning=true;
-speed=25;
+speed=28;
 
 const wheel=document.getElementById("wheel");
 const interval=setInterval(()=>{
 angle+=speed;
-wheel.style.transform="rotate("+angle+"deg)";
-speed*=0.97;   // धीरे-धीरे slowdown
+wheel.style.transform=`rotate(${angle}deg)`;
+speed*=0.965;
 
-if(speed<0.5){
+if(speed<0.6){
 clearInterval(interval);
 spinning=false;
 setTimeout(showResult,500);
