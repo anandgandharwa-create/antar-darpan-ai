@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@ body{
 margin:0;
 font-family:system-ui,sans-serif;
 background:#0b0b0f;
-color:#fff;
+color:#ffffff;
 }
 .container{
 max-width:420px;
@@ -33,22 +33,48 @@ border-radius:14px;
 padding:14px;
 margin-bottom:12px;
 cursor:pointer;
+text-align:center;
 }
 .option:hover{
 background:#1f1f2b;
 }
+
 .result{
 display:none;
 text-align:center;
 }
+
 .energy{
-font-size:26px;
-margin:20px 0;
+font-size:22px;
+margin-top:15px;
 }
+
 .insight{
 color:#aaa;
 font-size:15px;
+margin-top:10px;
 }
+
+/* 🔮 Chakra Animation */
+.chakra-box{
+display:flex;
+justify-content:center;
+margin:20px 0;
+}
+.chakra{
+width:120px;
+height:120px;
+border-radius:50%;
+animation:pulse 2.6s infinite;
+box-shadow:0 0 30px currentColor;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);opacity:0.7;}
+50%{transform:scale(1.15);opacity:1;}
+100%{transform:scale(1);opacity:0.7;}
+}
+
 button{
 width:100%;
 padding:14px;
@@ -65,49 +91,59 @@ margin-top:20px;
 
 <body>
 
-<div class="container" id="app">
+<div class="container">
+
 <h1>Response Resonance Analyzer</h1>
 
+<!-- TEST SCREEN -->
 <div id="test">
 <div class="question" id="questionText"></div>
 
-<div class="option" onclick="answer()">Option A</div>
-<div class="option" onclick="answer()">Option B</div>
-<div class="option" onclick="answer()">Option C</div>
+<div class="option" onclick="answer()">ठीक है</div>
+<div class="option" onclick="answer()">सम्भव है</div>
+<div class="option" onclick="answer()">देखते हैं</div>
 </div>
 
+<!-- RESULT SCREEN -->
 <div class="result" id="result">
+
+<div class="chakra-box">
+<div class="chakra" id="chakraCircle"></div>
+</div>
+
 <div class="energy" id="energyState"></div>
 <div class="insight" id="insightText"></div>
-<button onclick="restart()">Test Again</button>
+
+<button onclick="restart()">पुनः परीक्षण करें</button>
 </div>
+
 </div>
 
 <script>
-const questions=[
-"When someone interrupts you suddenly…",
-"If a plan changes without notice…",
-"When someone doesn’t reply on time…",
-"If you are left alone unexpectedly…",
-"When something remains unfinished…"
+const questions = [
+"जब कोई अचानक आपकी बात काट दे…",
+"अगर आपकी योजना बिना बताए बदल जाए…",
+"कोई आपको उत्तर देने में देर कर दे…",
+"अचानक अकेलापन महसूस हो जाए…",
+"कोई काम अधूरा रह जाए…"
 ];
 
-let index=0;
-let times=[];
-let startTime=0;
+let index = 0;
+let times = [];
+let startTime = 0;
 
 function showQuestion(){
-document.getElementById("questionText").innerText=questions[index];
-startTime=Date.now();
+document.getElementById("questionText").innerText = questions[index];
+startTime = Date.now();
 }
 
 function answer(){
-let end=Date.now();
-let diff=(end-startTime)/1000;
-times.push(diff);
+let endTime = Date.now();
+let responseTime = (endTime - startTime) / 1000;
+times.push(responseTime);
 index++;
 
-if(index<questions.length){
+if(index < questions.length){
 showQuestion();
 }else{
 showResult();
@@ -115,38 +151,59 @@ showResult();
 }
 
 function showResult(){
-document.getElementById("test").style.display="none";
-document.getElementById("result").style.display="block";
+document.getElementById("test").style.display = "none";
+document.getElementById("result").style.display = "block";
 
-let avg=times.reduce((a,b)=>a+b,0)/times.length;
-let energy="", insight="";
+let avg = times.reduce((a,b)=>a+b,0) / times.length;
 
-if(avg<1.2){
-energy="🔴 Mind Dominant";
-insight="Your responses are very fast. Mind is reacting before awareness.";
+let energy="", insight="", chakraColor="", chakraName="";
+
+if(avg < 1.2){
+energy = "🔴 मन नकारात्मक (Reactive Mind)";
+insight = "उत्तर बहुत तेज़ हैं। मन नियंत्रण में है।";
+chakraColor = "#ff2e2e";
+chakraName = "मूलाधार चक्र";
 }
-else if(avg>=1.2 && avg<=2.5){
-energy="🟡 Transitional State";
-insight="You are alert, but still influenced by mental speed.";
+else if(avg >= 1.2 && avg <= 2.5){
+energy = "🟠 भावनात्मक अस्थिरता";
+insight = "मन और चेतना के बीच संघर्ष है।";
+chakraColor = "#ff8c1a";
+chakraName = "स्वाधिष्ठान चक्र";
 }
-else if(avg>2.5 && avg<=4.5){
-energy="🟢 Conscious Flow";
-insight="Your energy is balanced. Awareness is leading the mind.";
+else if(avg > 2.5 && avg <= 3.5){
+energy = "🟡 संतुलन की अवस्था";
+insight = "आप जागरूक हैं, ऊर्जा स्थिर हो रही है।";
+chakraColor = "#ffd369";
+chakraName = "मणिपुर चक्र";
+}
+else if(avg > 3.5 && avg <= 4.5){
+energy = "🟢 सकारात्मक ऊर्जा";
+insight = "हृदय की चेतना सक्रिय है।";
+chakraColor = "#00ffcc";
+chakraName = "अनाहत चक्र";
 }
 else{
-energy="⚠️ Overthinking Zone";
-insight="Too much delay shows doubt and energy leakage.";
+energy = "🟣 उच्च चेतना";
+insight = "उत्तर सोच-समझकर हैं। आंतरिक शांति विद्यमान है।";
+chakraColor = "#8a2be2";
+chakraName = "आज्ञा / सहस्रार चक्र";
 }
 
-document.getElementById("energyState").innerText=energy;
-document.getElementById("insightText").innerText=insight;
+document.getElementById("energyState").innerText =
+energy + " | " + chakraName;
+
+document.getElementById("insightText").innerText = insight;
+
+const circle = document.getElementById("chakraCircle");
+circle.style.background = chakraColor;
+circle.style.color = chakraColor;
 }
 
 function restart(){
-index=0;
-times=[];
-document.getElementById("result").style.display="none";
-document.getElementById("test").style.display="block";
+index = 0;
+times = [];
+document.getElementById("result").style.display = "none";
+document.getElementById("test").style.display = "block";
 showQuestion();
 }
 
