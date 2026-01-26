@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>सत्य-जागरूकता मीटर</title>
+<title>Divine Access | सत्य-जागरूकता</title>
 
 <style>
 body{
 margin:0;
 font-family:system-ui,sans-serif;
 background:#0b0b0f;
-color:#ffffff;
+color:#fff;
 }
 .container{
 max-width:420px;
@@ -18,15 +18,9 @@ margin:auto;
 padding:20px;
 text-align:center;
 }
-h1{
-color:#ffd369;
-font-size:22px;
-margin-bottom:15px;
-}
-.question{
-font-size:17px;
-margin-bottom:20px;
-}
+h1{color:#ffd369;font-size:22px;}
+.sub{color:#aaa;font-size:14px;margin-bottom:20px;}
+
 .option{
 background:#15151c;
 border:1px solid #222;
@@ -38,8 +32,31 @@ text-align:left;
 }
 .option:hover{background:#1f1f2b;}
 
-.result{display:none;}
+.screen{display:none;}
+.screen.active{display:block;}
 
+/* 🌈 Spin Wheel */
+.spin-box{
+height:60vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:radial-gradient(circle,
+red,orange,yellow,green,cyan,blue,violet);
+}
+.wheel{
+width:140px;
+height:140px;
+border-radius:50%;
+border:10px solid rgba(255,255,255,0.4);
+animation:spin 1.2s linear infinite;
+}
+@keyframes spin{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
+
+/* 📊 Meter */
 .meter-box{
 height:220px;
 display:flex;
@@ -50,17 +67,7 @@ margin:30px 0;
 .meter{
 width:120px;
 border-radius:20px;
-transition:all 0.9s ease;
-}
-
-.level{
-font-size:20px;
-margin-top:10px;
-}
-.insight{
-font-size:15px;
-color:#aaa;
-margin-top:8px;
+transition:all 1s ease;
 }
 
 button{
@@ -72,8 +79,9 @@ background:linear-gradient(135deg,#ffd369,#ff9f1c);
 color:#000;
 font-size:16px;
 font-weight:bold;
-margin-top:20px;
 }
+.level{font-size:20px;margin-top:10px;}
+.insight{font-size:15px;color:#aaa;margin-top:8px;}
 </style>
 </head>
 
@@ -81,23 +89,41 @@ margin-top:20px;
 
 <div class="container">
 
-<h1>सत्य-जागरूकता मीटर</h1>
+<h1>Divine Access</h1>
+<div class="sub">सत्य के प्रति आपकी जागरूकता</div>
 
 <!-- SCREEN 1 -->
-<div id="screen1">
-<div class="question">
-आपकी दृष्टि में संसार और आपके जीवन के बारे में क्या सबसे अधिक सटीक है?
+<div id="screen1" class="screen active">
+<p>आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
+क्या सबसे अधिक सटीक है?</p>
+
+<div class="option" onclick="choose(1)">
+संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
+</div>
+<div class="option" onclick="choose(2)">
+संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
+</div>
+<div class="option" onclick="choose(3)">
+संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
+</div>
+<div class="option" onclick="choose(4)">
+संसार एक अनुभव है, मैं इसका साक्षी हूँ।
+</div>
+<div class="option" onclick="choose(5)">
+संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
+</div>
 </div>
 
-<div class="option" onclick="selectLevel(1)">संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।</div>
-<div class="option" onclick="selectLevel(2)">संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।</div>
-<div class="option" onclick="selectLevel(3)">संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।</div>
-<div class="option" onclick="selectLevel(4)">संसार एक अनुभव है, मैं इसका साक्षी हूँ।</div>
-<div class="option" onclick="selectLevel(5)">संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।</div>
+<!-- SCREEN 2 : SPIN -->
+<div id="screen2" class="screen">
+<div class="spin-box">
+<div class="wheel"></div>
+</div>
+<p>ऊर्जा संरेखित हो रही है…</p>
 </div>
 
-<!-- SCREEN 2 -->
-<div class="result" id="screen2">
+<!-- SCREEN 3 : RESULT -->
+<div id="screen3" class="screen">
 
 <div class="meter-box">
 <div class="meter" id="meterBar"></div>
@@ -106,35 +132,45 @@ margin-top:20px;
 <div class="level" id="levelText"></div>
 <div class="insight" id="insightText"></div>
 
-<button onclick="reset()">पुनः जाँच करें</button>
+<button onclick="reset()">पुनः अनुभव करें</button>
 </div>
 
 </div>
 
 <script>
-const levels={
-1:{h:180,c:"#ff2e2e",t:"सीमित भौतिक दृष्टि",i:"यह दृष्टि संसार को अंतिम सत्य मानती है।"},
-2:{h:150,c:"#ff8c1a",t:"कर्म-बोध",i:"यहाँ उत्तरदायित्व का बोध है, पर दृष्टि अभी बंधी है।"},
-3:{h:120,c:"#ffd369",t:"विवेक की जागृति",i:"यहाँ अस्थिरता की पहचान शुरू होती है।"},
-4:{h:80,c:"#00ffcc",t:"साक्षी चेतना",i:"आप अनुभवों से अलग होकर देख पा रहे हैं।"},
-5:{h:40,c:"#8a2be2",t:"सत्य के निकट दृष्टि",i:"यहाँ जीवन और संसार दोनों चेतना में विलीन हैं।"}
+const data={
+1:{h:180,c:"#ff2e2e",t:"भौतिक दृष्टि",i:"दृष्टि अभी बाहरी संसार में अटकी है।"},
+2:{h:150,c:"#ff8c1a",t:"कर्म-बोध",i:"उत्तरदायित्व दिख रहा है, पर पूर्ण स्वतंत्रता नहीं।"},
+3:{h:120,c:"#ffd369",t:"विवेक की शुरुआत",i:"अस्थिरता की पहचान हो रही है।"},
+4:{h:80,c:"#00ffcc",t:"साक्षी चेतना",i:"अनुभवों से दूरी बन रही है।"},
+5:{h:40,c:"#8a2be2",t:"सत्य के निकट",i:"जीवन चेतना में विलीन प्रतीत होता है।"}
 };
 
-function selectLevel(l){
-document.getElementById("screen1").style.display="none";
-document.getElementById("screen2").style.display="block";
+let chosen=1;
+
+function choose(l){
+chosen=l;
+document.getElementById("screen1").classList.remove("active");
+document.getElementById("screen2").classList.add("active");
+
+setTimeout(showResult,2000);
+}
+
+function showResult(){
+document.getElementById("screen2").classList.remove("active");
+document.getElementById("screen3").classList.add("active");
 
 const m=document.getElementById("meterBar");
-m.style.height=levels[l].h+"px";
-m.style.background=levels[l].c;
+m.style.height=data[chosen].h+"px";
+m.style.background=data[chosen].c;
 
-document.getElementById("levelText").innerText=levels[l].t;
-document.getElementById("insightText").innerText=levels[l].i;
+document.getElementById("levelText").innerText=data[chosen].t;
+document.getElementById("insightText").innerText=data[chosen].i;
 }
 
 function reset(){
-document.getElementById("screen2").style.display="none";
-document.getElementById("screen1").style.display="block";
+document.getElementById("screen3").classList.remove("active");
+document.getElementById("screen1").classList.add("active");
 }
 </script>
 
