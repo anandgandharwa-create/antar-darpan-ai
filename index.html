@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emotional Weight Scale</title>
+<title>सत्य-जागरूकता मीटर</title>
 
 <style>
 body{
@@ -21,6 +21,10 @@ text-align:center;
 h1{
 color:#ffd369;
 font-size:22px;
+margin-bottom:15px;
+}
+.question{
+font-size:17px;
 margin-bottom:20px;
 }
 .option{
@@ -30,32 +34,33 @@ border-radius:14px;
 padding:14px;
 margin-bottom:12px;
 cursor:pointer;
+text-align:left;
 }
 .option:hover{background:#1f1f2b;}
 
 .result{display:none;}
 
-.scale-box{
-margin:30px 0;
-height:200px;
+.meter-box{
+height:220px;
 display:flex;
 align-items:flex-end;
 justify-content:center;
+margin:30px 0;
 }
-.weight{
+.meter{
 width:120px;
 border-radius:20px;
-transition:all 0.8s ease;
+transition:all 0.9s ease;
 }
 
-.label{
-margin-top:15px;
+.level{
 font-size:20px;
+margin-top:10px;
 }
 .insight{
-margin-top:10px;
 font-size:15px;
 color:#aaa;
+margin-top:8px;
 }
 
 button{
@@ -76,27 +81,29 @@ margin-top:20px;
 
 <div class="container">
 
-<h1>भावनात्मक भार मापक</h1>
+<h1>सत्य-जागरूकता मीटर</h1>
 
 <!-- SCREEN 1 -->
 <div id="screen1">
-<p>इस समय आप किस भाव को भीतर महसूस कर रहे हैं?</p>
+<div class="question">
+आपकी दृष्टि में संसार और आपके जीवन के बारे में क्या सबसे अधिक सटीक है?
+</div>
 
-<div class="option" onclick="selectEmotion('भय')">भय</div>
-<div class="option" onclick="selectEmotion('क्रोध')">क्रोध</div>
-<div class="option" onclick="selectEmotion('अपेक्षा')">अपेक्षा</div>
-<div class="option" onclick="selectEmotion('प्रेम')">प्रेम</div>
-<div class="option" onclick="selectEmotion('कृतज्ञता')">कृतज्ञता</div>
+<div class="option" onclick="selectLevel(1)">संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।</div>
+<div class="option" onclick="selectLevel(2)">संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।</div>
+<div class="option" onclick="selectLevel(3)">संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।</div>
+<div class="option" onclick="selectLevel(4)">संसार एक अनुभव है, मैं इसका साक्षी हूँ।</div>
+<div class="option" onclick="selectLevel(5)">संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।</div>
 </div>
 
 <!-- SCREEN 2 -->
 <div class="result" id="screen2">
 
-<div class="scale-box">
-<div class="weight" id="weightBar"></div>
+<div class="meter-box">
+<div class="meter" id="meterBar"></div>
 </div>
 
-<div class="label" id="weightText"></div>
+<div class="level" id="levelText"></div>
 <div class="insight" id="insightText"></div>
 
 <button onclick="reset()">पुनः जाँच करें</button>
@@ -105,52 +112,24 @@ margin-top:20px;
 </div>
 
 <script>
-const emotions = {
-"भय":{
-height:180,
-color:"#ff2e2e",
-text:"अत्यधिक भारी",
-insight:"भय ऊर्जा को नीचे खींचता है। शरीर और मन में संकुचन आता है।"
-},
-"क्रोध":{
-height:160,
-color:"#ff8c1a",
-text:"भारी",
-insight:"क्रोध में ऊर्जा तेज़ होती है, पर असंतुलित रहती है।"
-},
-"अपेक्षा":{
-height:140,
-color:"#ffd369",
-text:"मध्यम",
-insight:"अपेक्षा में ऊर्जा रुकी रहती है, मुक्त नहीं हो पाती।"
-},
-"प्रेम":{
-height:80,
-color:"#00ffcc",
-text:"हल्का",
-insight:"प्रेम में ऊर्जा बहती है, बोझ नहीं बनती।"
-},
-"कृतज्ञता":{
-height:40,
-color:"#8a2be2",
-text:"बहुत हल्का",
-insight:"कृतज्ञता ऊर्जा को मुक्त और शांत कर देती है।"
-}
+const levels={
+1:{h:180,c:"#ff2e2e",t:"सीमित भौतिक दृष्टि",i:"यह दृष्टि संसार को अंतिम सत्य मानती है।"},
+2:{h:150,c:"#ff8c1a",t:"कर्म-बोध",i:"यहाँ उत्तरदायित्व का बोध है, पर दृष्टि अभी बंधी है।"},
+3:{h:120,c:"#ffd369",t:"विवेक की जागृति",i:"यहाँ अस्थिरता की पहचान शुरू होती है।"},
+4:{h:80,c:"#00ffcc",t:"साक्षी चेतना",i:"आप अनुभवों से अलग होकर देख पा रहे हैं।"},
+5:{h:40,c:"#8a2be2",t:"सत्य के निकट दृष्टि",i:"यहाँ जीवन और संसार दोनों चेतना में विलीन हैं।"}
 };
 
-function selectEmotion(e){
+function selectLevel(l){
 document.getElementById("screen1").style.display="none";
 document.getElementById("screen2").style.display="block";
 
-const bar=document.getElementById("weightBar");
-bar.style.height=emotions[e].height+"px";
-bar.style.background=emotions[e].color;
+const m=document.getElementById("meterBar");
+m.style.height=levels[l].h+"px";
+m.style.background=levels[l].c;
 
-document.getElementById("weightText").innerText=
-"भाव का भार: " + emotions[e].text;
-
-document.getElementById("insightText").innerText=
-emotions[e].insight;
+document.getElementById("levelText").innerText=levels[l].t;
+document.getElementById("insightText").innerText=levels[l].i;
 }
 
 function reset(){
