@@ -1,199 +1,156 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>भाव-आवृत्ति गणक | Divine Access</title>
+<title>Response Resonance Analyzer</title>
 
 <style>
 body{
-    margin:0;
-    font-family:system-ui,sans-serif;
-    background:#0b0b0f;
-    color:#fff;
+margin:0;
+font-family:system-ui,sans-serif;
+background:#0b0b0f;
+color:#fff;
 }
 .container{
-    padding:20px;
-    max-width:420px;
-    margin:auto;
+max-width:420px;
+margin:auto;
+padding:20px;
 }
 h1{
-    text-align:center;
-    font-size:22px;
-    color:#ffd369;
+text-align:center;
+color:#ffd369;
+font-size:22px;
 }
-.card{
-    background:#15151c;
-    border-radius:16px;
-    padding:16px;
-    margin-bottom:12px;
-    cursor:pointer;
-    border:1px solid #222;
+.question{
+font-size:18px;
+margin-bottom:20px;
 }
-.card:hover{background:#1f1f2b;}
+.option{
+background:#15151c;
+border:1px solid #222;
+border-radius:14px;
+padding:14px;
+margin-bottom:12px;
+cursor:pointer;
+}
+.option:hover{
+background:#1f1f2b;
+}
+.result{
+display:none;
+text-align:center;
+}
+.energy{
+font-size:26px;
+margin:20px 0;
+}
+.insight{
+color:#aaa;
+font-size:15px;
+}
 button{
-    width:100%;
-    padding:14px;
-    border-radius:14px;
-    border:none;
-    background:linear-gradient(135deg,#ffd369,#ff9f1c);
-    color:#000;
-    font-size:16px;
-    font-weight:bold;
-    margin-top:20px;
-}
-.result{display:none;}
-.label{
-    color:#aaa;
-    font-size:13px;
-}
-.value{
-    font-size:17px;
-    margin-bottom:12px;
-}
-
-/* 🔮 Chakra Animation */
-.chakra-box{
-    display:flex;
-    justify-content:center;
-    margin:20px 0;
-}
-.chakra{
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    animation:pulse 2.5s infinite;
-    box-shadow:0 0 20px currentColor;
-}
-@keyframes pulse{
-    0%{transform:scale(1);opacity:0.7;}
-    50%{transform:scale(1.15);opacity:1;}
-    100%{transform:scale(1);opacity:0.7;}
+width:100%;
+padding:14px;
+border-radius:14px;
+border:none;
+background:linear-gradient(135deg,#ffd369,#ff9f1c);
+color:#000;
+font-size:16px;
+font-weight:bold;
+margin-top:20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Screen 1 -->
-<div class="container" id="screen1">
-<h1>आपकी वर्तमान भाव-दशा</h1>
+<div class="container" id="app">
+<h1>Response Resonance Analyzer</h1>
 
-<div class="card" onclick="selectEmotion('भय')">भय 😟</div>
-<div class="card" onclick="selectEmotion('क्रोध')">क्रोध 😠</div>
-<div class="card" onclick="selectEmotion('दुख')">दुख 😔</div>
-<div class="card" onclick="selectEmotion('भ्रम')">भ्रम 😵</div>
-<div class="card" onclick="selectEmotion('तटस्थ')">तटस्थ 😐</div>
-<div class="card" onclick="selectEmotion('आशा')">आशा 🙂</div>
-<div class="card" onclick="selectEmotion('कृतज्ञता')">कृतज्ञता 🙏</div>
-<div class="card" onclick="selectEmotion('प्रेम')">प्रेम ❤️</div>
+<div id="test">
+<div class="question" id="questionText"></div>
+
+<div class="option" onclick="answer()">Option A</div>
+<div class="option" onclick="answer()">Option B</div>
+<div class="option" onclick="answer()">Option C</div>
 </div>
 
-<!-- Screen 2 -->
-<div class="container result" id="screen2">
-<h1>आपकी भावात्मक आवृत्ति</h1>
-
-<div class="chakra-box">
-    <div class="chakra" id="chakraAnim"></div>
+<div class="result" id="result">
+<div class="energy" id="energyState"></div>
+<div class="insight" id="insightText"></div>
+<button onclick="restart()">Test Again</button>
 </div>
-
-<div class="label">चयनित भाव</div>
-<div class="value" id="emotion"></div>
-
-<div class="label">आवृत्ति</div>
-<div class="value" id="frequency"></div>
-
-<div class="label">संबंधित चक्र</div>
-<div class="value" id="chakra"></div>
-
-<div class="label">चेतना स्तर</div>
-<div class="value" id="level"></div>
-
-<div class="label">Divine संकेत</div>
-<div class="value" id="message"></div>
-
-<button onclick="goBack()">पुनः जाँच करें</button>
 </div>
 
 <script>
-const data={
-"भय":{
-freq:"80 Hz",
-chakra:"मूलाधार चक्र",
-color:"#ff3b3b",
-level:"अस्तित्व रक्षा",
-msg:"भय ऊर्जा को नीचे खींचता है। स्वयं को सुरक्षित अनुभव कराएँ।"
-},
-"क्रोध":{
-freq:"95 Hz",
-chakra:"स्वाधिष्ठान चक्र",
-color:"#ff7a18",
-level:"अशांत मन",
-msg:"क्रोध ऊर्जा को बिखेरता है। श्वास पर ध्यान दें।"
-},
-"दुख":{
-freq:"110 Hz",
-chakra:"मणिपुर चक्र",
-color:"#ffd369",
-level:"भावनात्मक बोझ",
-msg:"दुख स्वीकार से हल्का होता है।"
-},
-"भ्रम":{
-freq:"130 Hz",
-chakra:"मणिपुर / अनाहत",
-color:"#9acd32",
-level:"अस्थिर चेतना",
-msg:"भ्रम में निर्णय न लें। साक्षी बनें।"
-},
-"तटस्थ":{
-freq:"150 Hz",
-chakra:"अनाहत चक्र",
-color:"#00ffcc",
-level:"सामान्य चेतना",
-msg:"यह परिवर्तन का द्वार है।"
-},
-"आशा":{
-freq:"200 Hz",
-chakra:"विशुद्ध चक्र",
-color:"#4da6ff",
-level:"उर्ध्वगति",
-msg:"आशा ऊर्जा को ऊपर उठाती है।"
-},
-"कृतज्ञता":{
-freq:"300 Hz",
-chakra:"आज्ञा चक्र",
-color:"#8a2be2",
-level:"हृदय चेतना",
-msg:"कृतज्ञता चेतना का विस्तार करती है।"
-},
-"प्रेम":{
-freq:"420 Hz",
-chakra:"सहस्रार चक्र",
-color:"#ffffff",
-level:"दिव्य चेतना",
-msg:"प्रेम में पूर्ण समर्पण है।"
-}
-};
+const questions=[
+"When someone interrupts you suddenly…",
+"If a plan changes without notice…",
+"When someone doesn’t reply on time…",
+"If you are left alone unexpectedly…",
+"When something remains unfinished…"
+];
 
-function selectEmotion(e){
-document.getElementById("screen1").style.display="none";
-document.getElementById("screen2").style.display="block";
+let index=0;
+let times=[];
+let startTime=0;
 
-document.getElementById("emotion").innerText=e;
-document.getElementById("frequency").innerText=data[e].freq;
-document.getElementById("chakra").innerText=data[e].chakra;
-document.getElementById("level").innerText=data[e].level;
-document.getElementById("message").innerText=data[e].msg;
-
-const ch=document.getElementById("chakraAnim");
-ch.style.background=data[e].color;
-ch.style.color=data[e].color;
+function showQuestion(){
+document.getElementById("questionText").innerText=questions[index];
+startTime=Date.now();
 }
 
-function goBack(){
-document.getElementById("screen2").style.display="none";
-document.getElementById("screen1").style.display="block";
+function answer(){
+let end=Date.now();
+let diff=(end-startTime)/1000;
+times.push(diff);
+index++;
+
+if(index<questions.length){
+showQuestion();
+}else{
+showResult();
 }
+}
+
+function showResult(){
+document.getElementById("test").style.display="none";
+document.getElementById("result").style.display="block";
+
+let avg=times.reduce((a,b)=>a+b,0)/times.length;
+let energy="", insight="";
+
+if(avg<1.2){
+energy="🔴 Mind Dominant";
+insight="Your responses are very fast. Mind is reacting before awareness.";
+}
+else if(avg>=1.2 && avg<=2.5){
+energy="🟡 Transitional State";
+insight="You are alert, but still influenced by mental speed.";
+}
+else if(avg>2.5 && avg<=4.5){
+energy="🟢 Conscious Flow";
+insight="Your energy is balanced. Awareness is leading the mind.";
+}
+else{
+energy="⚠️ Overthinking Zone";
+insight="Too much delay shows doubt and energy leakage.";
+}
+
+document.getElementById("energyState").innerText=energy;
+document.getElementById("insightText").innerText=insight;
+}
+
+function restart(){
+index=0;
+times=[];
+document.getElementById("result").style.display="none";
+document.getElementById("test").style.display="block";
+showQuestion();
+}
+
+showQuestion();
 </script>
 
 </body>
