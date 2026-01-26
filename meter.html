@@ -32,16 +32,18 @@ overflow:hidden;
   width:280px;
   height:280px;
   border-radius:50%;
- background: conic-gradient(
+background: conic-gradient(
+  from 180deg,
   #ff2e2e 0deg,     /* Left - Red */
-  #ff2e2e 30deg,
+  #ff2e2e 60deg,
 
-  #ffd369 60deg,    /* Center - Yellow */
+  #ffd369 90deg,    /* Middle - Yellow */
   #ffd369 120deg,
 
   #00c853 150deg,   /* Right - Green */
   #00c853 180deg
 );
+
 
   "></div>
 
@@ -102,11 +104,11 @@ font-size:16px;
 <script>
 // level 1–5 angle map
 const angleMap = {
-  1: -80,
+  1: -80,   // Red (Left)
   2: -40,
-  3: 0,
+  3: 0,     // Yellow (Center)
   4: 40,
-  5: 80
+  5: 80     // Green (Right)
 };
 
 const textMap = {
