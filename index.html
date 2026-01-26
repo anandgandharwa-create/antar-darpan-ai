@@ -1,162 +1,28 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Divine Access</title>
-
-<style>
-body{
-margin:0;
-font-family:system-ui,sans-serif;
-background:#0b0b0f;
-color:#fff;
-text-align:center;
-}
-.container{
-max-width:420px;
-margin:auto;
-padding:20px;
-}
-
-h1{
-color:#ffd369;
-font-size:26px;
-margin-bottom:6px;
-}
-.sub{
-color:#aaa;
-font-size:15px;
-margin-bottom:10px;
-}
-
-/* 🔮 HALF CIRCLE METER */
-.meter-wrap{
-position:relative;
-width:280px;
-height:140px;
-margin:25px auto 10px;
-overflow:hidden;
-}
-
-.meter-arc{
-width:280px;
-height:280px;
-border-radius:50%;
-background:conic-gradient(
-#ff2e2e 0deg,
-#ff8c1a 45deg,
-#ffd369 90deg,
-#00ffcc 135deg,
-#8a2be2 180deg
-);
-}
-
-.meter-center{
-position:absolute;
-width:200px;
-height:200px;
-background:#0b0b0f;
-border-radius:50%;
-top:40px;
-left:40px;
-}
-
-/* Needle */
-.needle{
-position:absolute;
-width:4px;
-height:120px;
-background:#fff;
-bottom:0;
-left:50%;
-transform-origin: bottom;
-transform: rotate(-90deg);
-border-radius:2px;
-transition: transform 1.4s cubic-bezier(.25,.8,.25,1);
-}
-
-.needle-dot{
-position:absolute;
-width:14px;
-height:14px;
-background:#fff;
-border-radius:50%;
-bottom:-7px;
-left:calc(50% - 7px);
-}
-
-/* Result text */
-.level{
-font-size:22px;
-margin-top:15px;
-}
-.insight{
-font-size:15px;
-color:#aaa;
-margin-top:6px;
-}
-
-button{
-width:100%;
-padding:14px;
-border-radius:14px;
-border:none;
-background:#222;
-color:#fff;
-margin-top:20px;
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
-<body>
-
-<div class="container">
+<body style="background:#0b0b0f;color:#fff;text-align:center;padding-top:120px;">
 
 <h1>Divine Access</h1>
-<div class="sub">सत्य के प्रति आपकी जागरूकता</div>
+<p>सत्य के प्रति आपकी जागरूकता</p>
 
-<!-- METER -->
-<div class="meter-wrap">
-  <div class="meter-arc"></div>
-  <div class="meter-center"></div>
-  <div class="needle" id="needle"></div>
-  <div class="needle-dot"></div>
-</div>
-
-<div class="level" id="levelText">सत्य के निकट</div>
-<div class="insight" id="insightText">
-जीवन चेतना में घटित हो रहा है।
-</div>
-
-<button onclick="demo()">डेमो घुमाएँ</button>
-
-</div>
+<button onclick="start()" style="
+padding:16px 30px;
+border-radius:30px;
+border:none;
+background:#ffd369;
+font-size:18px;
+font-weight:bold;">
+शुरू करें
+</button>
 
 <script>
-// 1 से 5 तक level
-function setMeter(level){
-const angles={
-1:-80,
-2:-40,
-3:0,
-4:40,
-5:80
-};
-document.getElementById("needle").style.transform=
-`rotate(${angles[level]}deg)`;
+function start(){
+window.location.href = "question.html";
 }
-
-// Demo only (आप इसे result logic से जोड़ देंगे)
-let demoLevel=1;
-function demo(){
-setMeter(demoLevel);
-demoLevel++;
-if(demoLevel>5) demoLevel=1;
-}
-
-// Initial
-setTimeout(()=>setMeter(4),500);
 </script>
 
 </body>
