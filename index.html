@@ -18,6 +18,39 @@ margin:auto;
 padding:20px;
 text-align:center;
 }
+  .half-meter{
+  position: relative;
+  width: 260px;
+  height: 130px;
+  margin: 30px auto;
+  overflow: hidden;
+}
+
+.arc{
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #ff2e2e,
+    #ff8c1a,
+    #ffd369,
+    #00ffcc,
+    #8a2be2
+  );
+}
+
+.needle{
+  position:absolute;
+  width:4px;
+  height:120px;
+  background:#fff;
+  bottom:0;
+  left:50%;
+  transform-origin: bottom;
+  transform: rotate(-90deg);
+  border-radius:2px;
+  transition: transform 1s ease;
+}
 h1{color:#ffd369;font-size:22px;}
 .sub{color:#aaa;font-size:14px;margin-bottom:20px;}
 
@@ -103,6 +136,10 @@ margin-top:20px;
 
 <h1>Divine Access</h1>
 <div class="sub">सत्य के प्रति आपकी जागरूकता</div>
+<div class="half-meter">
+  <div class="arc"></div>
+  <div class="needle" id="needle"></div>
+</div>
 
 <!-- SCREEN 1 -->
 <div id="screen1" class="screen active">
@@ -188,6 +225,18 @@ m.style.background=data[chosen].c;
 
 document.getElementById("levelText").innerText=data[chosen].t;
 document.getElementById("insightText").innerText=data[chosen].i;
+}
+// angle: -90 (left) to +90 (right)
+function setMeter(level){
+  const angleMap={
+    1:-80,
+    2:-40,
+    3:0,
+    4:40,
+    5:80
+  };
+  document.getElementById("needle").style.transform =
+    `rotate(${angleMap[level]}deg)`;
 }
 
 function reset(){
