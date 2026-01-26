@@ -51,16 +51,16 @@ let spinning = false;
 function startSpin(){
   if(spinning) return;
   spinning = true;
-  speed = 25;
+  speed = 45;
 
   const wheel = document.getElementById("wheel");
 
   const interval = setInterval(()=>{
     angle += speed;
     wheel.style.transform = "rotate(" + angle + "deg)";
-    speed *= 0.96;   // धीरे-धीरे रुकना
+    speed *= 0.985;   // धीरे-धीरे रुकना
 
-    if(speed < 0.5){
+    if(speed < 0.3){
       clearInterval(interval);
       spinning = false;
       setTimeout(goNext, 600);
