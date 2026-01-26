@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inner Response Energy Test</title>
+<title>Emotional Weight Scale</title>
 
 <style>
 body{
@@ -16,14 +16,11 @@ color:#ffffff;
 max-width:420px;
 margin:auto;
 padding:20px;
+text-align:center;
 }
 h1{
-text-align:center;
 color:#ffd369;
 font-size:22px;
-}
-.question{
-font-size:18px;
 margin-bottom:20px;
 }
 .option{
@@ -36,38 +33,29 @@ cursor:pointer;
 }
 .option:hover{background:#1f1f2b;}
 
-.result{
-display:none;
-text-align:center;
-}
+.result{display:none;}
 
-.chakra-box{
+.scale-box{
+margin:30px 0;
+height:200px;
 display:flex;
+align-items:flex-end;
 justify-content:center;
-margin:20px 0;
 }
-.chakra{
+.weight{
 width:120px;
-height:120px;
-border-radius:50%;
-animation:pulse 2.6s infinite;
-box-shadow:0 0 30px currentColor;
+border-radius:20px;
+transition:all 0.8s ease;
 }
 
-@keyframes pulse{
-0%{transform:scale(1);opacity:0.7;}
-50%{transform:scale(1.15);opacity:1;}
-100%{transform:scale(1);opacity:0.7;}
-}
-
-.energy{
-font-size:22px;
+.label{
 margin-top:15px;
+font-size:20px;
 }
 .insight{
-color:#aaa;
-font-size:15px;
 margin-top:10px;
+font-size:15px;
+color:#aaa;
 }
 
 button{
@@ -88,168 +76,87 @@ margin-top:20px;
 
 <div class="container">
 
-<h1>Response Energy Test</h1>
+<h1>भावनात्मक भार मापक</h1>
 
-<!-- QUESTION SCREEN -->
-<div id="test">
-<div class="question" id="questionText"></div>
-<div id="options"></div>
+<!-- SCREEN 1 -->
+<div id="screen1">
+<p>इस समय आप किस भाव को भीतर महसूस कर रहे हैं?</p>
+
+<div class="option" onclick="selectEmotion('भय')">भय</div>
+<div class="option" onclick="selectEmotion('क्रोध')">क्रोध</div>
+<div class="option" onclick="selectEmotion('अपेक्षा')">अपेक्षा</div>
+<div class="option" onclick="selectEmotion('प्रेम')">प्रेम</div>
+<div class="option" onclick="selectEmotion('कृतज्ञता')">कृतज्ञता</div>
 </div>
 
-<!-- RESULT SCREEN -->
-<div class="result" id="result">
+<!-- SCREEN 2 -->
+<div class="result" id="screen2">
 
-<div class="chakra-box">
-<div class="chakra" id="energyCircle"></div>
+<div class="scale-box">
+<div class="weight" id="weightBar"></div>
 </div>
 
-<div class="energy" id="energyState"></div>
+<div class="label" id="weightText"></div>
 <div class="insight" id="insightText"></div>
 
-<button onclick="restart()">पुनः परीक्षण करें</button>
+<button onclick="reset()">पुनः जाँच करें</button>
 </div>
 
 </div>
 
 <script>
-const questions = [
-{
-q:"जब कोई अचानक आपकी बात काट दे…",
-o:[
-{text:"तुरंत प्रतिक्रिया देना", score:-2},
-{text:"शांत रहकर सुनना", score:2},
-{text:"मुस्कराकर बात आगे बढ़ाना", score:1}
-]
+const emotions = {
+"भय":{
+height:180,
+color:"#ff2e2e",
+text:"अत्यधिक भारी",
+insight:"भय ऊर्जा को नीचे खींचता है। शरीर और मन में संकुचन आता है।"
 },
-{
-q:"अगर आपकी योजना बिना बताए बदल जाए…",
-o:[
-{text:"चिड़चिड़ापन महसूस करना", score:-2},
-{text:"स्थिति को स्वीकार करना", score:2},
-{text:"थोड़ा असहज होना", score:-1}
-]
+"क्रोध":{
+height:160,
+color:"#ff8c1a",
+text:"भारी",
+insight:"क्रोध में ऊर्जा तेज़ होती है, पर असंतुलित रहती है।"
 },
-{
-q:"कोई आपको उत्तर देने में देर कर दे…",
-o:[
-{text:"मन में नकारात्मक सोचना", score:-2},
-{text:"धैर्य रखना", score:2},
-{text:"ध्यान भटक जाना", score:-1}
-]
+"अपेक्षा":{
+height:140,
+color:"#ffd369",
+text:"मध्यम",
+insight:"अपेक्षा में ऊर्जा रुकी रहती है, मुक्त नहीं हो पाती।"
 },
-{
-q:"अचानक अकेलापन महसूस हो जाए…",
-o:[
-{text:"खुद को व्यस्त कर लेना", score:1},
-{text:"भाव में बह जाना", score:-2},
-{text:"शांत बैठकर महसूस करना", score:2}
-]
+"प्रेम":{
+height:80,
+color:"#00ffcc",
+text:"हल्का",
+insight:"प्रेम में ऊर्जा बहती है, बोझ नहीं बनती।"
 },
-{
-q:"कोई काम अधूरा रह जाए…",
-o:[
-{text:"खुद को दोष देना", score:-2},
-{text:"सीख लेकर आगे बढ़ना", score:2},
-{text:"टालते रहना", score:-1}
-]
+"कृतज्ञता":{
+height:40,
+color:"#8a2be2",
+text:"बहुत हल्का",
+insight:"कृतज्ञता ऊर्जा को मुक्त और शांत कर देती है।"
 }
-];
+};
 
-let index=0;
-let totalScore=0;
-let times=[];
-let startTime=0;
+function selectEmotion(e){
+document.getElementById("screen1").style.display="none";
+document.getElementById("screen2").style.display="block";
 
-function showQuestion(){
-document.getElementById("questionText").innerText=questions[index].q;
-const optDiv=document.getElementById("options");
-optDiv.innerHTML="";
+const bar=document.getElementById("weightBar");
+bar.style.height=emotions[e].height+"px";
+bar.style.background=emotions[e].color;
 
-questions[index].o.forEach(opt=>{
-const d=document.createElement("div");
-d.className="option";
-d.innerText=opt.text;
-d.onclick=()=>answer(opt.score);
-optDiv.appendChild(d);
-});
+document.getElementById("weightText").innerText=
+"भाव का भार: " + emotions[e].text;
 
-startTime=Date.now();
+document.getElementById("insightText").innerText=
+emotions[e].insight;
 }
 
-function answer(score){
-let endTime=Date.now();
-let responseTime=(endTime-startTime)/1000;
-times.push(responseTime);
-totalScore+=score;
-index++;
-
-if(index<questions.length){
-showQuestion();
-}else{
-showResult();
+function reset(){
+document.getElementById("screen2").style.display="none";
+document.getElementById("screen1").style.display="block";
 }
-}
-
-function showResult(){
-document.getElementById("test").style.display="none";
-document.getElementById("result").style.display="block";
-
-let avgTime=times.reduce((a,b)=>a+b,0)/times.length;
-let energy="", insight="", color="";
-
-/* Speed effect */
-let speedScore=0;
-if(avgTime<1.2) speedScore=-2;
-else if(avgTime<=2.5) speedScore=-1;
-else if(avgTime<=3.5) speedScore=1;
-else speedScore=2;
-
-let finalScore=totalScore+speedScore;
-
-if(finalScore<=-4){
-energy="🔴 तीव्र मानसिक प्रतिक्रिया";
-insight="मन तेज़ है और भाव नकारात्मक दिशा में हैं।";
-color="#ff2e2e";
-}
-else if(finalScore<=-1){
-energy="🟠 भावनात्मक अस्थिरता";
-insight="मन और सजगता के बीच संघर्ष चल रहा है।";
-color="#ff8c1a";
-}
-else if(finalScore<=2){
-energy="🟡 संतुलन की अवस्था";
-insight="आप भीतर से स्थिर हो रहे हैं।";
-color="#ffd369";
-}
-else if(finalScore<=4){
-energy="🟢 सकारात्मक और शांत ऊर्जा";
-insight="आपकी प्रतिक्रियाएँ जागरूकता से आ रही हैं।";
-color="#00ffcc";
-}
-else{
-energy="🟣 उच्च चेतन अवस्था";
-insight="मन शांत है, उत्तर चेतना से उत्पन्न हो रहे हैं।";
-color="#8a2be2";
-}
-
-document.getElementById("energyState").innerText=energy;
-document.getElementById("insightText").innerText=insight;
-
-const c=document.getElementById("energyCircle");
-c.style.background=color;
-c.style.color=color;
-}
-
-function restart(){
-index=0;
-totalScore=0;
-times=[];
-document.getElementById("result").style.display="none";
-document.getElementById("test").style.display="block";
-showQuestion();
-}
-
-showQuestion();
 </script>
 
 </body>
