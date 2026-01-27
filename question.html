@@ -4,16 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Divine Access | Question</title>
-</head>
 
-<body style="
+<style>
+body{
 margin:0;
 font-family:system-ui,sans-serif;
 background:#0b0b0f;
-color:#ffffff;
+color:#fff;
 text-align:center;
 padding:20px;
-">
+}
+.option{
+width:100%;
+padding:14px;
+margin-bottom:12px;
+border-radius:14px;
+border:1px solid #333;
+background:#15151c;
+color:#fff;
+text-align:left;
+cursor:pointer;
+}
+.option.selected{
+border-color:#ffd369;
+background:#1f1f2b;
+}
+.next-btn{
+margin-top:20px;
+padding:14px 30px;
+border-radius:30px;
+border:none;
+background:#ffd369;
+font-size:16px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
 
 <h2 style="color:#ffd369;">Divine Access</h2>
 
@@ -22,33 +50,53 @@ padding:20px;
 क्या सबसे अधिक सटीक है?
 </p>
 
-<div style="text-align:left;max-width:420px;margin:auto;">
+<div style="max-width:420px;margin:auto;text-align:left;">
 
-<button onclick="choose(1)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+<div class="option" onclick="selectOption(1,this)">
 संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
-</button>
+</div>
 
-<button onclick="choose(2)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+<div class="option" onclick="selectOption(2,this)">
 संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
-</button>
+</div>
 
-<button onclick="choose(3)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+<div class="option" onclick="selectOption(3,this)">
 संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
-</button>
+</div>
 
-<button onclick="choose(4)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+<div class="option" onclick="selectOption(4,this)">
 संसार एक अनुभव है, मैं इसका साक्षी हूँ।
-</button>
+</div>
 
-<button onclick="choose(5)" style="width:100%;padding:14px;margin-bottom:12px;border-radius:14px;border:none;">
+<div class="option" onclick="selectOption(5,this)">
 संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
-</button>
+</div>
 
 </div>
 
+<button class="next-btn" onclick="goNext()">Next</button>
+
 <script>
-function choose(level){
-  localStorage.setItem("truthLevel", level);
+let selectedLevel = null;
+
+function selectOption(level, el){
+  selectedLevel = level;
+
+  // remove previous selection
+  document.querySelectorAll('.option').forEach(opt=>{
+    opt.classList.remove('selected');
+  });
+
+  // highlight selected
+  el.classList.add('selected');
+}
+
+function goNext(){
+  if(selectedLevel === null){
+    alert("कृपया पहले एक विकल्प चुनें");
+    return;
+  }
+  localStorage.setItem("truthLevel", selectedLevel);
   window.location.href = "spin.html";
 }
 </script>
