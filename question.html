@@ -7,38 +7,62 @@
 
 <style>
 body{
-margin:0;
-font-family:system-ui,sans-serif;
-background:#0b0b0f;
-color:#fff;
-text-align:center;
-padding:20px;
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#0b0b0f;
+  color:#ffffff;
+  padding:20px;
+  text-align:center;
 }
+
+h2{
+  color:#ffd369;
+  margin-bottom:10px;
+}
+
+.question{
+  font-size:18px;
+  margin:30px 0 20px;
+}
+
+.options{
+  max-width:420px;
+  margin:auto;
+  text-align:left;
+}
+
 .option{
-width:100%;
-padding:14px;
-margin-bottom:12px;
-border-radius:14px;
-border:1px solid #333;
-background:#15151c;
-color:#fff;
-text-align:left;
-cursor:pointer;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:14px;
+  border:1px solid #333;
+  background:#15151c;
+  cursor:pointer;
+  transition:all 0.2s ease;
 }
+
+.option:hover{
+  background:#1f1f2b;
+}
+
 .option.selected{
-border-color:#ffd369;
-background:#1f1f2b;
+  border-color:#ffd369;
+  background:#262637;
+  box-shadow:0 0 10px rgba(255,211,105,0.3);
 }
+
 .next-btn{
-margin-top:20px;
-padding:14px 30px;
-border-radius:30px;
-border:none;
-background:#ffd369;
-font-size:16px;
-font-weight:bold;
+  margin-top:25px;
+  padding:14px 34px;
+  border-radius:30px;
+  border:none;
+  background:#ffd369;
+  color:#000;
+  font-size:16px;
+  font-weight:bold;
 }
-  .next-btn:disabled{
+
+.next-btn:disabled{
   background:#555;
   color:#aaa;
   cursor:not-allowed;
@@ -48,69 +72,61 @@ font-weight:bold;
 
 <body>
 
-<h2 style="color:#ffd369;">Divine Access</h2>
+<h2>Divine Access</h2>
 
-<p style="font-size:18px;margin:30px 0;">
-आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
-क्या सबसे अधिक सटीक है?
-</p>
-
-<div style="max-width:420px;margin:auto;text-align:left;">
-
-<div class="option" onclick="selectOption(1,this)">
-संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
+<div class="question">
+  आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
+  क्या सबसे अधिक सटीक है?
 </div>
 
-<div class="option" onclick="selectOption(2,this)">
-संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
+<div class="options">
+
+  <div class="option" data-level="1">
+    संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
+  </div>
+
+  <div class="option" data-level="2">
+    संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
+  </div>
+
+  <div class="option" data-level="3">
+    संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
+  </div>
+
+  <div class="option" data-level="4">
+    संसार एक अनुभव है, मैं इसका साक्षी हूँ।
+  </div>
+
+  <div class="option" data-level="5">
+    संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
+  </div>
+
 </div>
 
-<div class="option" onclick="selectOption(3,this)">
-संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
-</div>
-
-<div class="option" onclick="selectOption(4,this)">
-संसार एक अनुभव है, मैं इसका साक्षी हूँ।
-</div>
-
-<div class="option" onclick="selectOption(5,this)">
-संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
-</div>
-
-</div>
-
-<button class="next-btn" id="nextBtn" onclick="goNext()" disabled>
-Next
-</button>
+<button class="next-btn" id="nextBtn" disabled>Next</button>
 
 <script>
 let selectedLevel = null;
+const options = document.querySelectorAll(".option");
+const nextBtn = document.getElementById("nextBtn");
 
-function selectOption(level, el){
-  selectedLevel = level;
+// option select logic
+options.forEach(opt=>{
+  opt.addEventListener("click", ()=>{
+    options.forEach(o=>o.classList.remove("selected"));
+    opt.classList.add("selected");
 
-  document.querySelectorAll('.option').forEach(opt=>{
-    opt.classList.remove('selected');
+    selectedLevel = opt.getAttribute("data-level");
+    nextBtn.disabled = false;
   });
+});
 
-  el.classList.add('selected');
-
-  // ✅ Enable Next button
-  document.getElementById("nextBtn").disabled = false;
-}
-
-  // highlight selected
-  el.classList.add('selected');
-}
-
-function goNext(){
-  if(selectedLevel === null){
-    alert("कृपया पहले एक विकल्प चुनें");
-    return;
-  }
+// next button
+nextBtn.addEventListener("click", ()=>{
+  if(!selectedLevel) return;
   localStorage.setItem("truthLevel", selectedLevel);
   window.location.href = "spin.html";
-}
+});
 </script>
 
 </body>
