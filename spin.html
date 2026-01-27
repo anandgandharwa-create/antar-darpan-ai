@@ -51,6 +51,9 @@ let spinning = false;
 function startSpin(){
   if(spinning) return;
   spinning = true;
+const sound = document.getElementById("spinSound");
+sound.currentTime = 0;
+sound.play();
 
   const wheel = document.getElementById("wheel");
   let start = Date.now();
@@ -69,6 +72,7 @@ function startSpin(){
     if(elapsed >= duration){
       clearInterval(interval);
       spinning = false;
+      sound.pause();
       setTimeout(goNext, 700);
     }
   }, 30);
@@ -79,6 +83,7 @@ function goNext(){
   window.location.href = "meter.html";
 }
 </script>
+<audio id="spinSound" src="spin.mp3" loop></audio>
 
 </body>
 </html>
