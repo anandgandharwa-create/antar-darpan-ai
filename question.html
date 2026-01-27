@@ -38,6 +38,11 @@ background:#ffd369;
 font-size:16px;
 font-weight:bold;
 }
+  .next-btn:disabled{
+  background:#555;
+  color:#aaa;
+  cursor:not-allowed;
+}
 </style>
 </head>
 
@@ -74,7 +79,9 @@ font-weight:bold;
 
 </div>
 
-<button class="next-btn" onclick="goNext()">Next</button>
+<button class="next-btn" id="nextBtn" onclick="goNext()" disabled>
+Next
+</button>
 
 <script>
 let selectedLevel = null;
@@ -82,10 +89,15 @@ let selectedLevel = null;
 function selectOption(level, el){
   selectedLevel = level;
 
-  // remove previous selection
   document.querySelectorAll('.option').forEach(opt=>{
     opt.classList.remove('selected');
   });
+
+  el.classList.add('selected');
+
+  // ✅ Enable Next button
+  document.getElementById("nextBtn").disabled = false;
+}
 
   // highlight selected
   el.classList.add('selected');
