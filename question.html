@@ -31,26 +31,32 @@ h2{
   text-align:left;
 }
 
+/* Base option */
 .option{
   padding:14px;
   margin-bottom:12px;
   border-radius:14px;
-  border:1px solid #333;
-  background:#15151c;
+  border:2px solid transparent;
   cursor:pointer;
-  transition:all 0.2s ease;
+  transition:all 0.25s ease;
+  color:#000;
+  font-weight:500;
 }
 
-.option:hover{
-  background:#1f1f2b;
-}
+/* Individual colours */
+.opt-1{ background:#ff6b6b; }   /* Red */
+.opt-2{ background:#ff9f43; }   /* Orange */
+.opt-3{ background:#feca57; }   /* Yellow */
+.opt-4{ background:#48dbfb; }   /* Cyan */
+.opt-5{ background:#1dd1a1; }   /* Green */
 
+/* Selected glow (same colour feel) */
 .option.selected{
-  border-color:#ffd369;
-  background:#262637;
-  box-shadow:0 0 10px rgba(255,211,105,0.3);
+  box-shadow:0 0 14px rgba(255,255,255,0.5);
+  transform:scale(1.02);
 }
 
+/* Next button */
 .next-btn{
   margin-top:25px;
   padding:14px 34px;
@@ -81,23 +87,23 @@ h2{
 
 <div class="options">
 
-  <div class="option" data-level="1">
+  <div class="option opt-1" data-level="1">
     संसार वास्तविक है, और जीवन का लक्ष्य इसमें सुख-सुविधा पाना है।
   </div>
 
-  <div class="option" data-level="2">
+  <div class="option opt-2" data-level="2">
     संसार कर्मों का परिणाम है, जैसा बोया है वैसा ही मिलता है।
   </div>
 
-  <div class="option" data-level="3">
+  <div class="option opt-3" data-level="3">
     संसार परिवर्तनशील है, स्थायी कुछ भी नहीं।
   </div>
 
-  <div class="option" data-level="4">
+  <div class="option opt-4" data-level="4">
     संसार एक अनुभव है, मैं इसका साक्षी हूँ।
   </div>
 
-  <div class="option" data-level="5">
+  <div class="option opt-5" data-level="5">
     संसार और ‘मैं’ दोनों चेतना में ही घटित हो रहे हैं।
   </div>
 
@@ -110,18 +116,15 @@ let selectedLevel = null;
 const options = document.querySelectorAll(".option");
 const nextBtn = document.getElementById("nextBtn");
 
-// option select logic
 options.forEach(opt=>{
   opt.addEventListener("click", ()=>{
     options.forEach(o=>o.classList.remove("selected"));
     opt.classList.add("selected");
-
     selectedLevel = opt.getAttribute("data-level");
     nextBtn.disabled = false;
   });
 });
 
-// next button
 nextBtn.addEventListener("click", ()=>{
   if(!selectedLevel) return;
   localStorage.setItem("truthLevel", selectedLevel);
