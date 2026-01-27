@@ -43,47 +43,60 @@ font-weight:bold;
 TAP करें
 </button>
 
+<!-- AUDIO -->
+<audio id="spinSound" src="spin.mp3" preload="auto" loop></audio>
+
 <script>
 let angle = 0;
-let speed = 0;
 let spinning = false;
+
+const sound = document.getElementById("spinSound");
+sound.volume = 0.7; // initial volume
 
 function startSpin(){
   if(spinning) return;
   spinning = true;
-const sound = document.getElementById("spinSound");
-sound.currentTime = 0;
-sound.play();
+
+  /* 🔊 SOUND START (mobile-safe) */
+  sound.currentTime = 0;
+  const playPromise = sound.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {}); // avoid autoplay error
+  }
 
   const wheel = document.getElementById("wheel");
   let start = Date.now();
-  let duration = 5500; // 👉 5.5 सेकंड
-  let startSpeed = 40; // तेज़ शुरुआत
+  let duration = 5500;     // 5.5 sec spin
+  let startSpeed = 42;     // fast start
 
   const interval = setInterval(()=>{
     let elapsed = Date.now() - start;
     let progress = elapsed / duration;
+    if(progress > 1) progress = 1;
 
-    // ease-out effect
     let speed = startSpeed * (1 - progress);
     angle += speed;
     wheel.style.transform = "rotate(" + angle + "deg)";
+
+    /* 🔉 FADE OUT SOUND LAST 1.2s */
+    if(duration - elapsed < 1200){
+      sound.volume = Math.max(0, sound.volume - 0.03);
+    }
 
     if(elapsed >= duration){
       clearInterval(interval);
       spinning = false;
       sound.pause();
-      setTimeout(goNext, 700);
+      sound.volume = 0.7; // reset for next time
+      setTimeout(goNext, 600);
     }
   }, 30);
 }
-
 
 function goNext(){
   window.location.href = "meter.html";
 }
 </script>
-<audio id="spinSound" src="spin.mp3" loop></audio>
 
 </body>
 </html>
