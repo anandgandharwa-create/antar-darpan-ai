@@ -9,10 +9,11 @@
 /* ===== COMMON ===== */
 body{
   margin:0;
-  font-family:system-ui,sans-serif;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   background:#0b0b0f;
-  color:#fff;
-  text-align:center;
 }
 .hidden{display:none;}
 h1,h2{color:#ffd369;}
@@ -59,28 +60,35 @@ button{
 
 /* ===== METER ===== */
 .meter-wrap{
-  position:relative;width:300px;height:150px;
-  margin:40px auto;overflow:hidden;
+  position:relative;
+  width:300px;
+  height:180px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  margin:20px auto 10px;
 }
 .meter-arc{
-  width:300px;height:300px;border-radius:50%;
+  width:300px;
+  height:300px;
+  border-radius:50%;
   border:22px solid transparent;
   border-bottom:none;
   border-left-color:#ff2e2e;
   border-top-color:#ffd369;
   border-right-color:#00c853;
+  margin:0 auto;
 }
 .needle{
-  position:absolute;width:4px;height:120px;
-  background:#fff;bottom:0;left:50%;
-  transform-origin:bottom;
-  transform:rotate(-90deg);
-  transition:1.4s cubic-bezier(.25,.8,.25,1);
+  left:50%;
+  bottom:0;
+  transform-origin:bottom center;
+  transform: translateX(-50%) rotate(0deg);
+  height:110px;   /* mobile ke liye balanced */
 }
 .needle-dot{
-  position:absolute;width:14px;height:14px;
-  background:#fff;border-radius:50%;
-  bottom:-7px;left:calc(50% - 7px);
+  left:50%;
+  transform: translateX(-50%) rotate(0deg);
 }
 .glow-red{box-shadow:0 0 20px #ff2e2e;}
 .glow-yellow{box-shadow:0 0 20px #ffd369;}
