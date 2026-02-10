@@ -68,35 +68,36 @@ button{
 /* ===== METER ===== */
 .meter-wrap{
   position:relative;
-  width:300px;
-  height:150px;   /* ⬅️ HALF circle के लिए */
-  overflow:hidden; /* ⬅️ बहुत ज़रूरी */
+  width:280px;          /* ⬅️ 300 → 280 */
+  height:150px;
   margin:20px auto 10px;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
 }
 .meter-arc{
-  width:300px;
-  height:300px;
+  width:280px;          /* ⬅️ SAME as wrap */
+  height:280px;
   border-radius:50%;
-  border:22px solid transparent;
+  border:20px solid transparent;
   border-bottom:none;
   border-left-color:#ff2e2e;
   border-top-color:#ffd369;
   border-right-color:#00c853;
-  transform:scale(0.90);
-  transform-origin:center bottom;
+  box-sizing:border-box;
 }
 
 .needle{
   position:absolute;
   width:4px;
-  height:110px;
+  height:105px;
   background:#ffffff;
-  bottom:-6px;
   left:50%;
+  bottom:-4px;
   transform-origin:bottom center;
   transform:translateX(-50%) rotate(-90deg);
   border-radius:2px;
-  transition:transform 1.4s cubic-bezier(.25,.8,.25,1);
 }
 .needle-dot{
   position:absolute;
@@ -104,8 +105,8 @@ button{
   height:14px;
   background:#ffffff;
   border-radius:50%;
-  bottom:-12px;
   left:50%;
+  bottom:-10px;
   transform:translateX(-50%);
   box-shadow:0 0 12px rgba(255,255,255,0.8);
 }
