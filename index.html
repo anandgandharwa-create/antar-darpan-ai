@@ -6,7 +6,7 @@
 <title>Divine Access | अंतर-दर्पण</title>
 
 <style>
-/* ===== COMMON ===== */
+/* ===== BASE ===== */
 body{
   margin:0;
   min-height:100vh;
@@ -14,23 +14,39 @@ body{
   justify-content:center;
   align-items:center;
   background:#0b0b0f;
+  font-family:system-ui, sans-serif;
+  color:#ffffff;
+  text-align:center;
 }
 .hidden{display:none;}
-h1,h2{color:#ffd369;}
-p{color:#aaa;}
+h1,h2{color:#ffd369;margin-bottom:6px;}
+p{color:#aaa;margin-top:0;}
+
 button{
-  padding:16px 32px;
+  margin-top:18px;
+  padding:14px 34px;
   border-radius:30px;
   border:none;
   background:#ffd369;
+  color:#000;
   font-size:16px;
   font-weight:bold;
   cursor:pointer;
 }
 
+/* ===== SCREEN WRAPPER ===== */
+.screen{
+  width:100%;
+  max-width:420px;
+  padding:20px;
+}
+
 /* ===== QUESTION ===== */
-.question{font-size:18px;margin:30px 20px;}
-.options{max-width:420px;margin:auto;text-align:left;}
+.question{
+  font-size:18px;
+  margin:30px 0 20px;
+}
+.options{text-align:left;}
 .option{
   padding:14px;
   margin-bottom:12px;
@@ -49,24 +65,15 @@ button{
   transform:scale(1.02);
 }
 
-/* ===== SPIN ===== */
-#wheel{
-  width:220px;height:220px;
-  margin:40px auto;
-  border-radius:50%;
-  background:conic-gradient(red,orange,yellow,green,cyan,blue,violet,red);
-  box-shadow:0 0 30px rgba(255,255,255,.3);
-}
-
 /* ===== METER ===== */
 .meter-wrap{
   position:relative;
   width:300px;
   height:180px;
+  margin:20px auto 10px;
   display:flex;
   justify-content:center;
   align-items:flex-end;
-  margin:20px auto 10px;
 }
 .meter-arc{
   width:300px;
@@ -77,129 +84,131 @@ button{
   border-left-color:#ff2e2e;
   border-top-color:#ffd369;
   border-right-color:#00c853;
-  margin:0 auto;
 }
 .needle{
-  left:50%;
+  position:absolute;
+  width:4px;
+  height:110px;
+  background:#ffffff;
   bottom:0;
+  left:50%;
   transform-origin:bottom center;
-  transform: translateX(-50%) rotate(0deg);
-  height:110px;   /* mobile ke liye balanced */
+  transform:translateX(-50%) rotate(-90deg);
+  border-radius:2px;
+  transition:transform 1.4s cubic-bezier(.25,.8,.25,1);
 }
 .needle-dot{
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#ffffff;
+  border-radius:50%;
+  bottom:-7px;
   left:50%;
-  transform: translateX(-50%) rotate(0deg);
+  transform:translateX(-50%);
 }
-.glow-red{box-shadow:0 0 20px #ff2e2e;}
-.glow-yellow{box-shadow:0 0 20px #ffd369;}
-.glow-green{box-shadow:0 0 20px #00c853;}
-.level{font-size:22px;}
-.insight{font-size:15px;color:#aaa;}
+
+/* ===== TEXT ===== */
+.level{
+  font-size:22px;
+  margin-top:14px;
+}
+.insight{
+  font-size:15px;
+  color:#aaa;
+  margin-top:6px;
+  margin-bottom:18px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ===== SCREEN 1 : HOME ===== -->
-<section id="home">
+<!-- ===== HOME ===== -->
+<div class="screen" id="home">
   <h1>Divine Access</h1>
   <p>सत्य के प्रति आपकी जागरूकता</p>
   <button onclick="go('question')">शुरू करें</button>
-</section>
+</div>
 
-<!-- ===== SCREEN 2 : QUESTION ===== -->
-<section id="question" class="hidden">
+<!-- ===== QUESTION ===== -->
+<div class="screen hidden" id="question">
   <h2>Divine Access</h2>
   <div class="question">
-    आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
+    आपकी दृष्टि में संसार और जीवन के बारे में<br>
     क्या सबसे अधिक सटीक है?
   </div>
+
   <div class="options">
-    <div class="option opt-1" data-level="1">संसार वास्तविक है, सुख ही लक्ष्य है।</div>
-    <div class="option opt-2" data-level="2">कर्मों का परिणाम है।</div>
-    <div class="option opt-3" data-level="3">सब परिवर्तनशील है।</div>
-    <div class="option opt-4" data-level="4">मैं इसका साक्षी हूँ।</div>
-    <div class="option opt-5" data-level="5">सब चेतना में घटित है।</div>
+    <div class="option opt-1" data-level="1">संसार ही वास्तविक है</div>
+    <div class="option opt-2" data-level="2">कर्म और परिणाम सत्य हैं</div>
+    <div class="option opt-3" data-level="3">सब परिवर्तनशील है</div>
+    <div class="option opt-4" data-level="4">मैं इसका साक्षी हूँ</div>
+    <div class="option opt-5" data-level="5">सब चेतना में घटित है</div>
   </div>
-  <button id="nextBtn" disabled onclick="goSpin()">Next</button>
-</section>
 
-<!-- ===== SCREEN 3 : SPIN ===== -->
-<section id="spin" class="hidden">
-  <h2>Divine Access</h2>
-  <p>ऊर्जा संरेखित हो रही है</p>
-  <div id="wheel"></div>
-  <button onclick="startSpin()">TAP करें</button>
-</section>
+  <button id="nextBtn" disabled onclick="goResult()">Next</button>
+</div>
 
-<!-- ===== SCREEN 4 : RESULT ===== -->
-<section id="result" class="hidden">
+<!-- ===== RESULT ===== -->
+<div class="screen hidden" id="result">
   <h2>Divine Access</h2>
+
   <div class="meter-wrap">
     <div class="meter-arc"></div>
     <div class="needle" id="needle"></div>
     <div class="needle-dot"></div>
   </div>
+
   <div class="level" id="levelText"></div>
   <div class="insight" id="insightText"></div>
+
   <button onclick="go('home')">पुनः अनुभव करें</button>
-</section>
+</div>
 
 <script>
 /* ===== NAV ===== */
 function go(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+  document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
 /* ===== QUESTION ===== */
-let selectedLevel=null;
+let selectedLevel = null;
 document.querySelectorAll(".option").forEach(opt=>{
   opt.onclick=()=>{
     document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
     opt.classList.add("selected");
-    selectedLevel=opt.dataset.level;
+    selectedLevel = opt.dataset.level;
     document.getElementById("nextBtn").disabled=false;
   }
 });
-function goSpin(){
-  localStorage.setItem("truthLevel",selectedLevel);
-  go("spin");
-}
 
-/* ===== SPIN ===== */
-let angle=0;
-function startSpin(){
-  let wheel=document.getElementById("wheel");
-  let start=Date.now(),dur=5000;
-  let int=setInterval(()=>{
-    let p=(Date.now()-start)/dur;
-    if(p>1)p=1;
-    angle+=40*(1-p);
-    wheel.style.transform=`rotate(${angle}deg)`;
-    if(p===1){clearInterval(int);setTimeout(showResult,600);}
-  },30);
-}
-
-/* ===== RESULT ===== */
-const angleMap={1:-80,2:-40,3:0,4:40,5:80};
-const textMap={1:"भौतिक दृष्टि",2:"कर्म-बोध",3:"विवेक",4:"साक्षी भाव",5:"सत्य के निकट"};
-const insightMap={
-1:"दृष्टि बाहरी है।",
-2:"उत्तरदायित्व है।",
-3:"परिवर्तन दिख रहा है।",
-4:"अलगाव बढ़ रहा है।",
-5:"चेतना में स्थित है।"
+/* ===== RESULT DATA ===== */
+const angleMap = {1:-80,2:-40,3:0,4:40,5:80};
+const textMap = {
+  1:"अविद्या (भौतिक दृष्टि)",
+  2:"कर्म-बोध",
+  3:"विवेक की जागृति",
+  4:"साक्षी-भाव",
+  5:"सत्य के निकट"
 };
-function showResult(){
+const insightMap = {
+  1:"चेतना अभी बाह्य संसार और परिणामों में उलझी हुई है।",
+  2:"उत्तरदायित्व का बोध है, पर कर्तापन बना हुआ है।",
+  3:"संसार की अनित्यता स्पष्ट होने लगी है।",
+  4:"देखने वाला और देखा गया अलग दिखने लगा है।",
+  5:"चेतना अपने स्वरूप में स्थिर हो रही है।"
+};
+
+function goResult(){
   go("result");
-  let l=localStorage.getItem("truthLevel")||3;
-  let n=document.getElementById("needle");
+  const level = selectedLevel || 3;
   setTimeout(()=>{
-    n.style.transform=`rotate(${angleMap[l]}deg)`;
-    document.getElementById("levelText").innerText=textMap[l];
-    document.getElementById("insightText").innerText=insightMap[l];
-    n.className="needle "+(l<=2?"glow-red":l==3?"glow-yellow":"glow-green");
+    document.getElementById("needle").style.transform =
+      "translateX(-50%) rotate(" + angleMap[level] + "deg)";
+    document.getElementById("levelText").innerText = textMap[level];
+    document.getElementById("insightText").innerText = insightMap[level];
   },400);
 }
 </script>
