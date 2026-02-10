@@ -69,24 +69,25 @@ button{
 .meter-wrap{
   position:relative;
   width:280px;
-  height:140px;
-  margin:20px auto 10px;
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
+  height:140px;        /* आधा height */
+  margin:20px auto;
+  overflow:hidden;    /* नीचे का हिस्सा cut होगा */
 }
+
 .meter-arc{
   width:280px;
   height:280px;
   border-radius:50%;
   border:20px solid transparent;
-  border-top:none;
-  border-left-color:#ff2e2e;
-  border-bottom-color:#ffd369;
-  border-right-color:#00c853;
+
+  /* ❗ (∩) के लिए यही जरूरी है */
+  border-bottom:none;             /* ⬅️ नीचे खुला */
+
+  border-left-color:#ff2e2e;      /* 🔴 Left */
+  border-top-color:#ffd369;       /* 🟡 Centre */
+  border-right-color:#00c853;     /* 🟢 Right */
+
   box-sizing:border-box;
-  transform: scaleY(-1);
 }
 .needle{
   position:absolute;
@@ -94,11 +95,10 @@ button{
   height:105px;
   background:#ffffff;
   left:50%;
-  bottom:0;
+  bottom:-6px;
   transform-origin:bottom center;
   transform:translateX(-50%) rotate(-90deg);
   border-radius:2px;
-  transition:transform 1.4s cubic-bezier(.25,.8,.25,1);
 }
 .needle-dot{
   position:absolute;
@@ -107,9 +107,8 @@ button{
   background:#ffffff;
   border-radius:50%;
   left:50%;
-  bottom:-7px;
+  bottom:-12px;
   transform:translateX(-50%);
-  box-shadow:0 0 12px rgba(255,255,255,0.8);
 }
 /* ===== TEXT ===== */
 .level{
