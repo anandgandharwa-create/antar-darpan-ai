@@ -1,27 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-<title>Divine Access</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Divine Access | अंतर-दर्पण</title>
+
+<style>
+/* ===== COMMON ===== */
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#0b0b0f;
+  color:#fff;
+  text-align:center;
+}
+.hidden{display:none;}
+h1,h2{color:#ffd369;}
+p{color:#aaa;}
+button{
+  padding:16px 32px;
+  border-radius:30px;
+  border:none;
+  background:#ffd369;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* ===== QUESTION ===== */
+.question{font-size:18px;margin:30px 20px;}
+.options{max-width:420px;margin:auto;text-align:left;}
+.option{
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:14px;
+  cursor:pointer;
+  color:#000;
+  transition:.25s;
+}
+.opt-1{background:#ff6b6b;}
+.opt-2{background:#ff9f43;}
+.opt-3{background:#feca57;}
+.opt-4{background:#48dbfb;}
+.opt-5{background:#1dd1a1;}
+.option.selected{
+  box-shadow:0 0 14px rgba(255,255,255,.6);
+  transform:scale(1.02);
+}
+
+/* ===== SPIN ===== */
+#wheel{
+  width:220px;height:220px;
+  margin:40px auto;
+  border-radius:50%;
+  background:conic-gradient(red,orange,yellow,green,cyan,blue,violet,red);
+  box-shadow:0 0 30px rgba(255,255,255,.3);
+}
+
+/* ===== METER ===== */
+.meter-wrap{
+  position:relative;width:300px;height:150px;
+  margin:40px auto;overflow:hidden;
+}
+.meter-arc{
+  width:300px;height:300px;border-radius:50%;
+  border:22px solid transparent;
+  border-bottom:none;
+  border-left-color:#ff2e2e;
+  border-top-color:#ffd369;
+  border-right-color:#00c853;
+}
+.needle{
+  position:absolute;width:4px;height:120px;
+  background:#fff;bottom:0;left:50%;
+  transform-origin:bottom;
+  transform:rotate(-90deg);
+  transition:1.4s cubic-bezier(.25,.8,.25,1);
+}
+.needle-dot{
+  position:absolute;width:14px;height:14px;
+  background:#fff;border-radius:50%;
+  bottom:-7px;left:calc(50% - 7px);
+}
+.glow-red{box-shadow:0 0 20px #ff2e2e;}
+.glow-yellow{box-shadow:0 0 20px #ffd369;}
+.glow-green{box-shadow:0 0 20px #00c853;}
+.level{font-size:22px;}
+.insight{font-size:15px;color:#aaa;}
+</style>
 </head>
-<body style="background:#0b0b0f;color:#fff;text-align:center;padding-top:120px;">
 
-<h1>Divine Access</h1>
-<p>सत्य के प्रति आपकी जागरूकता</p>
+<body>
 
-<button onclick="start()" style="
-padding:16px 30px;
-border-radius:30px;
-border:none;
-background:#ffd369;
-font-size:18px;
-font-weight:bold;">
-शुरू करें
-</button>
+<!-- ===== SCREEN 1 : HOME ===== -->
+<section id="home">
+  <h1>Divine Access</h1>
+  <p>सत्य के प्रति आपकी जागरूकता</p>
+  <button onclick="go('question')">शुरू करें</button>
+</section>
+
+<!-- ===== SCREEN 2 : QUESTION ===== -->
+<section id="question" class="hidden">
+  <h2>Divine Access</h2>
+  <div class="question">
+    आपकी दृष्टि में संसार और आपके जीवन के बारे में<br>
+    क्या सबसे अधिक सटीक है?
+  </div>
+  <div class="options">
+    <div class="option opt-1" data-level="1">संसार वास्तविक है, सुख ही लक्ष्य है।</div>
+    <div class="option opt-2" data-level="2">कर्मों का परिणाम है।</div>
+    <div class="option opt-3" data-level="3">सब परिवर्तनशील है।</div>
+    <div class="option opt-4" data-level="4">मैं इसका साक्षी हूँ।</div>
+    <div class="option opt-5" data-level="5">सब चेतना में घटित है।</div>
+  </div>
+  <button id="nextBtn" disabled onclick="goSpin()">Next</button>
+</section>
+
+<!-- ===== SCREEN 3 : SPIN ===== -->
+<section id="spin" class="hidden">
+  <h2>Divine Access</h2>
+  <p>ऊर्जा संरेखित हो रही है</p>
+  <div id="wheel"></div>
+  <button onclick="startSpin()">TAP करें</button>
+</section>
+
+<!-- ===== SCREEN 4 : RESULT ===== -->
+<section id="result" class="hidden">
+  <h2>Divine Access</h2>
+  <div class="meter-wrap">
+    <div class="meter-arc"></div>
+    <div class="needle" id="needle"></div>
+    <div class="needle-dot"></div>
+  </div>
+  <div class="level" id="levelText"></div>
+  <div class="insight" id="insightText"></div>
+  <button onclick="go('home')">पुनः अनुभव करें</button>
+</section>
 
 <script>
-function start(){
-window.location.href = "question.html";
+/* ===== NAV ===== */
+function go(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+/* ===== QUESTION ===== */
+let selectedLevel=null;
+document.querySelectorAll(".option").forEach(opt=>{
+  opt.onclick=()=>{
+    document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
+    opt.classList.add("selected");
+    selectedLevel=opt.dataset.level;
+    document.getElementById("nextBtn").disabled=false;
+  }
+});
+function goSpin(){
+  localStorage.setItem("truthLevel",selectedLevel);
+  go("spin");
+}
+
+/* ===== SPIN ===== */
+let angle=0;
+function startSpin(){
+  let wheel=document.getElementById("wheel");
+  let start=Date.now(),dur=5000;
+  let int=setInterval(()=>{
+    let p=(Date.now()-start)/dur;
+    if(p>1)p=1;
+    angle+=40*(1-p);
+    wheel.style.transform=`rotate(${angle}deg)`;
+    if(p===1){clearInterval(int);setTimeout(showResult,600);}
+  },30);
+}
+
+/* ===== RESULT ===== */
+const angleMap={1:-80,2:-40,3:0,4:40,5:80};
+const textMap={1:"भौतिक दृष्टि",2:"कर्म-बोध",3:"विवेक",4:"साक्षी भाव",5:"सत्य के निकट"};
+const insightMap={
+1:"दृष्टि बाहरी है।",
+2:"उत्तरदायित्व है।",
+3:"परिवर्तन दिख रहा है।",
+4:"अलगाव बढ़ रहा है।",
+5:"चेतना में स्थित है।"
+};
+function showResult(){
+  go("result");
+  let l=localStorage.getItem("truthLevel")||3;
+  let n=document.getElementById("needle");
+  setTimeout(()=>{
+    n.style.transform=`rotate(${angleMap[l]}deg)`;
+    document.getElementById("levelText").innerText=textMap[l];
+    document.getElementById("insightText").innerText=insightMap[l];
+    n.className="needle "+(l<=2?"glow-red":l==3?"glow-yellow":"glow-green");
+  },400);
 }
 </script>
 
