@@ -69,11 +69,9 @@ button{
 .meter-wrap{
   position:relative;
   width:300px;
-  height:180px;
+  height:150px;   /* ⬅️ HALF circle के लिए */
+  overflow:hidden; /* ⬅️ बहुत ज़रूरी */
   margin:20px auto 10px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
 }
 .meter-arc{
   width:300px;
@@ -90,7 +88,7 @@ button{
   width:4px;
   height:110px;
   background:#ffffff;
-  bottom:0;
+  bottom:-6px;
   left:50%;
   transform-origin:bottom center;
   transform:translateX(-50%) rotate(-90deg);
@@ -103,9 +101,10 @@ button{
   height:14px;
   background:#ffffff;
   border-radius:50%;
-  bottom:-7px;
+  bottom:-12px;
   left:50%;
   transform:translateX(-50%);
+  box-shadow:0 0 12px rgba(255,255,255,0.8);
 }
 
 /* ===== TEXT ===== */
