@@ -6,7 +6,6 @@
 <title>Divine Access | अंतर-दर्पण</title>
 
 <style>
-/* ===== BASE ===== */
 body{
   margin:0;
   height:100vh;
@@ -18,6 +17,15 @@ body{
   overflow:hidden;
 }
 .hidden{display:none;}
+
+.screen{
+  width:100%;
+  max-width:420px;
+  padding:20px;
+  box-sizing:border-box;
+  text-align:center;
+}
+
 h1,h2{color:#ffd369;margin-bottom:6px;}
 p{color:#aaa;margin-top:0;}
 
@@ -33,25 +41,8 @@ button{
   cursor:pointer;
 }
 
-/* ===== SCREEN WRAPPER ===== */
-.screen{
-  width:100%;
-  max-width:420px;      /* Mobile safe width */
-  padding:20px;
-  box-sizing:border-box;
-  text-align:center;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;   /* horizontal centre */
-  justify-content:center; /* vertical content centre */
-}
-
 /* ===== QUESTION ===== */
-.question{
-  font-size:18px;
-  margin:30px 0 20px;
-}
+.question{font-size:18px;margin:30px 0 20px;}
 .options{text-align:left;}
 .option{
   padding:14px;
@@ -71,65 +62,7 @@ button{
   transform:scale(1.02);
 }
 
-/* ===== METER ===== */
-.meter-wrap{
-  position:relative;
-  width:280px;
-  height:140px;        /* आधा height */
-  margin:20px auto;
-  overflow:hidden;    /* नीचे का हिस्सा cut होगा */
-}
-
-.meter-arc{
-  width:280px;
-  height:280px;
-  border-radius:50%;
-  border:20px solid transparent;
-
-  /* ❗ (∩) के लिए यही जरूरी है */
-  border-bottom:none;             /* ⬅️ नीचे खुला */
-
-  border-left-color:#ff2e2e;      /* 🔴 Left */
-  border-top-color:#ffd369;       /* 🟡 Centre */
-  border-right-color:#00c853;     /* 🟢 Right */
-
-  box-sizing:border-box;
-}
-.needle{
-  position:absolute;
-  width:4px;
-  height:105px;
-  background:#ffffff;
-  left:50%;
-  bottom:-6px;
-  transform-origin:bottom center;
-  transform:translateX(-50%) rotate(-90deg);
-  border-radius:2px;
-
-  /* 👇 यह जरूरी है */
-  transition: transform 1.2s cubic-bezier(.25,.8,.25,1);
-}
-.needle-dot{
-  position:absolute;
-  width:14px;
-  height:14px;
-  background:#ffffff;
-  border-radius:50%;
-  left:50%;
-  bottom:-12px;
-  transform:translateX(-50%);
-}
-/* ===== TEXT ===== */
-.level{
-  font-size:22px;
-  margin-top:14px;
-}
-.insight{
-  font-size:15px;
-  color:#aaa;
-  margin-top:6px;
-  margin-bottom:18px;
-}
+/* ===== SPIN ===== */
 #wheel{
   width:200px;
   height:200px;
@@ -142,19 +75,63 @@ button{
   transition: transform 4s cubic-bezier(.25,.8,.25,1);
 }
 
+/* ===== METER ===== */
+.meter-wrap{
+  position:relative;
+  width:280px;
+  height:140px;
+  margin:20px auto;
+  overflow:hidden;
+}
+.meter-arc{
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  border:20px solid transparent;
+  border-bottom:none;
+  border-left-color:#ff2e2e;
+  border-top-color:#ffd369;
+  border-right-color:#00c853;
+  box-sizing:border-box;
+}
+.needle{
+  position:absolute;
+  width:4px;
+  height:105px;
+  background:#ffffff;
+  left:50%;
+  bottom:-6px;
+  transform-origin:bottom center;
+  transform:translateX(-50%) rotate(-90deg);
+  border-radius:2px;
+  transition: transform 1.2s cubic-bezier(.25,.8,.25,1);
+}
+.needle-dot{
+  position:absolute;
+  width:14px;
+  height:14px;
+  background:#ffffff;
+  border-radius:50%;
+  left:50%;
+  bottom:-12px;
+  transform:translateX(-50%);
+}
+
+.level{font-size:22px;margin-top:14px;}
+.insight{font-size:15px;color:#aaa;margin-top:6px;margin-bottom:18px;}
 </style>
 </head>
 
 <body>
 
-<!-- ===== HOME ===== -->
+<!-- HOME -->
 <div class="screen" id="home">
   <h1>Divine Access</h1>
   <p>सत्य के प्रति आपकी जागरूकता</p>
   <button onclick="go('question')">शुरू करें</button>
 </div>
 
-<!-- ===== QUESTION ===== -->
+<!-- QUESTION -->
 <div class="screen hidden" id="question">
   <h2>Divine Access</h2>
   <div class="question">
@@ -169,17 +146,18 @@ button{
     <div class="option opt-4" data-level="4">मैं इसका साक्षी हूँ</div>
     <div class="option opt-5" data-level="5">सब चेतना में घटित है</div>
   </div>
-<div class="screen hidden" id="spin">
-  <h2>ऊर्जा संरेखित हो रही है</h2>
 
-  <div id="wheel"></div>
-
-  <button onclick="startSpin()">SPIN करें</button>
-</div>
   <button id="nextBtn" disabled onclick="go('spin')">Next</button>
 </div>
 
-<!-- ===== RESULT ===== -->
+<!-- SPIN -->
+<div class="screen hidden" id="spin">
+  <h2>ऊर्जा संरेखित हो रही है</h2>
+  <div id="wheel"></div>
+  <button onclick="startSpin()">SPIN करें</button>
+</div>
+
+<!-- RESULT -->
 <div class="screen hidden" id="result">
   <h2>Divine Access</h2>
 
@@ -196,13 +174,11 @@ button{
 </div>
 
 <script>
-/* ===== NAV ===== */
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* ===== QUESTION ===== */
 let selectedLevel = null;
 document.querySelectorAll(".option").forEach(opt=>{
   opt.onclick=()=>{
@@ -213,7 +189,6 @@ document.querySelectorAll(".option").forEach(opt=>{
   }
 });
 
-/* ===== RESULT DATA ===== */
 const angleMap = {1:-80,2:-40,3:0,4:40,5:80};
 const textMap = {
   1:"अविद्या (भौतिक दृष्टि)",
@@ -230,16 +205,23 @@ const insightMap = {
   5:"चेतना अपने स्वरूप में स्थिर हो रही है।"
 };
 
+function startSpin(){
+  const wheel = document.getElementById("wheel");
+  const randomDeg = 1440 + Math.floor(Math.random()*360);
+  wheel.style.transform = "rotate(" + randomDeg + "deg)";
+
+  setTimeout(()=>{
+    goResult();
+  }, 4200);
+}
+
 function goResult(){
   go("result");
-
   const level = selectedLevel || 3;
   const needle = document.getElementById("needle");
 
-  // 1️⃣ पहले needle को left extreme पर सेट करें
   needle.style.transform = "translateX(-50%) rotate(-90deg)";
 
-  // 2️⃣ थोड़ा delay देकर final position पर घुमाएँ
   setTimeout(()=>{
     needle.style.transform =
       "translateX(-50%) rotate(" + angleMap[level] + "deg)";
@@ -249,18 +231,6 @@ function goResult(){
 
   }, 300);
 }
-  function startSpin(){
-  const wheel = document.getElementById("wheel");
-
-  const randomDeg = 1440 + Math.floor(Math.random()*360);
-
-  wheel.style.transform = "rotate(" + randomDeg + "deg)";
-
-  setTimeout(()=>{
-    goResult();   // aapka existing result function
-  }, 4200);
-}
-
 </script>
 
 </body>
