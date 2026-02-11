@@ -122,6 +122,18 @@ button{
   margin-top:6px;
   margin-bottom:18px;
 }
+#wheel{
+  width:200px;
+  height:200px;
+  margin:30px auto;
+  border-radius:50%;
+  background:conic-gradient(
+    red, orange, yellow, green, cyan, blue, violet, red
+  );
+  box-shadow:0 0 25px rgba(255,255,255,.3);
+  transition: transform 4s cubic-bezier(.25,.8,.25,1);
+}
+
 </style>
 </head>
 
@@ -149,8 +161,14 @@ button{
     <div class="option opt-4" data-level="4">मैं इसका साक्षी हूँ</div>
     <div class="option opt-5" data-level="5">सब चेतना में घटित है</div>
   </div>
+<div class="screen hidden" id="spin">
+  <h2>ऊर्जा संरेखित हो रही है</h2>
 
-  <button id="nextBtn" disabled onclick="goResult()">Next</button>
+  <div id="wheel"></div>
+
+  <button onclick="startSpin()">SPIN करें</button>
+</div>
+  <button id="nextBtn" disabled onclick="go('spin')">Next</button>
 </div>
 
 <!-- ===== RESULT ===== -->
@@ -223,6 +241,18 @@ function goResult(){
 
   }, 300);
 }
+  function startSpin(){
+  const wheel = document.getElementById("wheel");
+
+  const randomDeg = 1440 + Math.floor(Math.random()*360);
+
+  wheel.style.transform = "rotate(" + randomDeg + "deg)";
+
+  setTimeout(()=>{
+    goResult();   // aapka existing result function
+  }, 4200);
+}
+
 </script>
 
 </body>
