@@ -99,6 +99,9 @@ button{
   transform-origin:bottom center;
   transform:translateX(-50%) rotate(-90deg);
   border-radius:2px;
+
+  /* 👇 यह जरूरी है */
+  transition: transform 1.2s cubic-bezier(.25,.8,.25,1);
 }
 .needle-dot{
   position:absolute;
@@ -205,13 +208,22 @@ const insightMap = {
 
 function goResult(){
   go("result");
+
   const level = selectedLevel || 3;
+  const needle = document.getElementById("needle");
+
+  // 1️⃣ पहले needle को left extreme पर सेट करें
+  needle.style.transform = "translateX(-50%) rotate(-90deg)";
+
+  // 2️⃣ थोड़ा delay देकर final position पर घुमाएँ
   setTimeout(()=>{
-    document.getElementById("needle").style.transform =
+    needle.style.transform =
       "translateX(-50%) rotate(" + angleMap[level] + "deg)";
+
     document.getElementById("levelText").innerText = textMap[level];
     document.getElementById("insightText").innerText = insightMap[level];
-  },400);
+
+  }, 300);
 }
 </script>
 
