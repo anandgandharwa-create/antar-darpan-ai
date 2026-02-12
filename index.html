@@ -8,7 +8,7 @@
 <style>
 body{
   margin:0;
-  height:100svh;   /* mobile safe viewport */
+  height:100svh;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -16,6 +16,7 @@ body{
   font-family:system-ui, sans-serif;
   overflow:hidden;
 }
+
 .hidden{display:none;}
 
 .screen{
@@ -24,9 +25,9 @@ body{
   padding:20px;
   box-sizing:border-box;
   text-align:center;
-  transform: translateY(-40px);
 }
 
+/* Titles */
 h1,h2{color:#ffd369;margin-bottom:6px;}
 p{color:#aaa;margin-top:0;}
 
@@ -42,7 +43,7 @@ button{
   cursor:pointer;
 }
 
-/* ===== QUESTION ===== */
+/* QUESTION */
 .question{font-size:18px;margin:30px 0 20px;}
 .options{text-align:left;}
 .option{
@@ -51,7 +52,6 @@ button{
   border-radius:14px;
   cursor:pointer;
   color:#000;
-  transition:.25s;
 }
 .opt-1{background:#ff6b6b;}
 .opt-2{background:#ff9f43;}
@@ -63,7 +63,7 @@ button{
   transform:scale(1.02);
 }
 
-/* ===== SPIN ===== */
+/* SPIN */
 #wheel{
   width:200px;
   height:200px;
@@ -73,21 +73,16 @@ button{
     red, orange, yellow, green, cyan, blue, violet, red
   );
   box-shadow:0 0 25px rgba(255,255,255,.3);
-  transition: transform 4s cubic-bezier(.25,.8,.25,1);
   animation: pulseGlow 2.5s ease-in-out infinite;
 }
+
 @keyframes pulseGlow{
-  0%{
-    box-shadow: 0 0 20px rgba(255,255,255,.15);
- }
-  50%{
-    box-shadow: 0 0 60px rgba(255,255,255,.35);
-   }
-  100%{
-    box-shadow: 0 0 20px rgba(255,255,255,.15);
-  }
+  0%{ box-shadow: 0 0 20px rgba(255,255,255,.15); }
+  50%{ box-shadow: 0 0 60px rgba(255,255,255,.35); }
+  100%{ box-shadow: 0 0 20px rgba(255,255,255,.15); }
 }
-/* ===== METER ===== */
+
+/* METER */
 .meter-wrap{
   position:relative;
   width:280px;
@@ -110,19 +105,18 @@ button{
   position:absolute;
   width:4px;
   height:105px;
-  background:#ffffff;
+  background:#fff;
   left:50%;
   bottom:-6px;
   transform-origin:bottom center;
   transform:translateX(-50%) rotate(-90deg);
-  border-radius:2px;
   transition: transform 1.2s cubic-bezier(.25,.8,.25,1);
 }
 .needle-dot{
   position:absolute;
   width:14px;
   height:14px;
-  background:#ffffff;
+  background:#fff;
   border-radius:50%;
   left:50%;
   bottom:-12px;
@@ -136,14 +130,12 @@ button{
 
 <body>
 
-<!-- HOME -->
 <div class="screen" id="home">
   <h1>Divine Access</h1>
   <p>सत्य के प्रति आपकी जागरूकता</p>
   <button onclick="go('question')">शुरू करें</button>
 </div>
 
-<!-- QUESTION -->
 <div class="screen hidden" id="question">
   <h2>Divine Access</h2>
   <div class="question">
@@ -162,36 +154,33 @@ button{
   <button id="nextBtn" disabled onclick="go('spin')">Next</button>
 </div>
 
-<!-- SPIN -->
 <div class="screen hidden" id="spin">
   <h2>ऊर्जा संरेखित हो रही है</h2>
   <div id="wheel"></div>
   <button onclick="startSpin()">SPIN करें</button>
 </div>
 
-<!-- RESULT -->
 <div class="screen hidden" id="result">
   <h2>Divine Access</h2>
-
   <div class="meter-wrap">
     <div class="meter-arc"></div>
     <div class="needle" id="needle"></div>
     <div class="needle-dot"></div>
   </div>
-
   <div class="level" id="levelText"></div>
   <div class="insight" id="insightText"></div>
-
   <button onclick="go('home')">पुनः अनुभव करें</button>
 </div>
-let currentRotation = 0;
+
 <script>
+let selectedLevel = null;
+let currentRotation = 0;
+
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-let selectedLevel = null;
 document.querySelectorAll(".option").forEach(opt=>{
   opt.onclick=()=>{
     document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
@@ -219,10 +208,8 @@ const insightMap = {
 
 function startSpin(){
   const wheel = document.getElementById("wheel");
-
   wheel.style.animation = "none";
 
-  // हर बार 5 full rotation add करें
   currentRotation += 1800;
 
   wheel.style.transition = "transform 3.5s cubic-bezier(.12,.75,.38,1)";
@@ -232,20 +219,18 @@ function startSpin(){
     goResult();
   }, 3600);
 }
+
 function goResult(){
   go("result");
   const level = selectedLevel || 3;
   const needle = document.getElementById("needle");
 
   needle.style.transform = "translateX(-50%) rotate(-90deg)";
-
   setTimeout(()=>{
     needle.style.transform =
       "translateX(-50%) rotate(" + angleMap[level] + "deg)";
-
     document.getElementById("levelText").innerText = textMap[level];
     document.getElementById("insightText").innerText = insightMap[level];
-
   }, 300);
 }
 </script>
