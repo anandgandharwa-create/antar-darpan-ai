@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>अंतर-दर्पण | अंतर-दर्पण</title>
+<title>अंतर-दर्पण</title>
 
 <style>
 body{
@@ -11,12 +11,13 @@ body{
   height:100svh;
   display:flex;
   justify-content:center;
-  align-items:flex-start;   /* ⬅️ change */
-  padding-top:80px;         /* ⬅️ new */
+  align-items:flex-start;
+  padding-top:70px;
   background:#0b0b0f;
   font-family:system-ui, sans-serif;
   overflow:hidden;
 }
+
 .hidden{display:none;}
 
 .screen{
@@ -32,7 +33,7 @@ h1,h2{color:#ffd369;margin-bottom:6px;}
 p{color:#aaa;margin-top:0;}
 
 button{
-  margin-top:18px;
+  margin-top:20px;
   padding:14px 34px;
   border-radius:30px;
   border:none;
@@ -43,22 +44,20 @@ button{
   cursor:pointer;
 }
 
-/* ===== QUESTION ===== */
-
+/* QUESTION */
 #question{
-  margin-top:-80px;   /* थोड़ा ऊपर */
+  margin-top:-50px;
 }
 
 #question .question{
   font-size:18px;
   margin:25px 0 25px;
-  color:#ffffff;      /* 🔥 text visible */
+  color:#ffffff;
   line-height:1.5;
 }
 
 .options{
   text-align:left;
-  margin-top:10px;
 }
 
 .option{
@@ -66,7 +65,7 @@ button{
   margin-bottom:14px;
   border-radius:16px;
   cursor:pointer;
-  color:#111;           /* black but softer */
+  color:#111;
   font-weight:500;
   transition:all .25s ease;
 }
@@ -80,19 +79,6 @@ button{
 .option.selected{
   box-shadow:0 0 18px rgba(255,255,255,.5);
   transform:scale(1.03);
-}
-
-#nextBtn{
-  margin-top:25px;
-}
-.opt-1{background:#ff6b6b;}
-.opt-2{background:#ff9f43;}
-.opt-3{background:#feca57;}
-.opt-4{background:#48dbfb;}
-.opt-5{background:#1dd1a1;}
-.option.selected{
-  box-shadow:0 0 14px rgba(255,255,255,.6);
-  transform:scale(1.02);
 }
 
 /* SPIN */
@@ -109,9 +95,9 @@ button{
 }
 
 @keyframes pulseGlow{
-  0%{ box-shadow: 0 0 20px rgba(255,255,255,.15); }
-  50%{ box-shadow: 0 0 60px rgba(255,255,255,.35); }
-  100%{ box-shadow: 0 0 20px rgba(255,255,255,.15); }
+  0%{ box-shadow:0 0 20px rgba(255,255,255,.15);}
+  50%{ box-shadow:0 0 60px rgba(255,255,255,.35);}
+  100%{ box-shadow:0 0 20px rgba(255,255,255,.15);}
 }
 
 /* METER */
@@ -122,6 +108,7 @@ button{
   margin:20px auto;
   overflow:hidden;
 }
+
 .meter-arc{
   width:280px;
   height:280px;
@@ -133,6 +120,7 @@ button{
   border-right-color:#00c853;
   box-sizing:border-box;
 }
+
 .needle{
   position:absolute;
   width:4px;
@@ -144,6 +132,7 @@ button{
   transform:translateX(-50%) rotate(-90deg);
   transition: transform 1.2s cubic-bezier(.25,.8,.25,1);
 }
+
 .needle-dot{
   position:absolute;
   width:14px;
@@ -155,21 +144,37 @@ button{
   transform:translateX(-50%);
 }
 
-.level{font-size:22px;margin-top:14px;}
-.insight{font-size:15px;color:#aaa;margin-top:6px;margin-bottom:18px;}
- color:#ffd369;
+/* RESULT TEXT */
+.level{
+  font-size:24px;
+  margin-top:18px;
+  color:#ffd369;
+  font-weight:600;
+  text-shadow:0 0 12px rgba(255,211,105,0.35);
+}
 
+/* ✅ INSIGHT FIXED */
+.insight{
+  font-size:16px;
+  color:#d0d0d0;
+  margin-top:10px;
+  margin-bottom:20px;
+  line-height:1.6;
+  padding:0 10px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- HOME -->
 <div class="screen" id="home">
   <h1>अंतर-दर्पण</h1>
   <p>आपकी आत्मा का प्रतिबिम्ब</p>
   <button onclick="go('question')">शुरू करें</button>
 </div>
 
+<!-- QUESTION -->
 <div class="screen hidden" id="question">
   <h2>Divine Access</h2>
   <div class="question">
@@ -188,12 +193,14 @@ button{
   <button id="nextBtn" disabled onclick="go('spin')">Next</button>
 </div>
 
+<!-- SPIN -->
 <div class="screen hidden" id="spin">
   <h2>ऊर्जा संरेखित हो रही है</h2>
   <div id="wheel"></div>
   <button onclick="startSpin()">SPIN करें</button>
 </div>
 
+<!-- RESULT -->
 <div class="screen hidden" id="result">
   <h2>Divine Access</h2>
   <div class="meter-wrap">
@@ -201,8 +208,10 @@ button{
     <div class="needle" id="needle"></div>
     <div class="needle-dot"></div>
   </div>
+
   <div class="level" id="levelText"></div>
   <div class="insight" id="insightText"></div>
+
   <button onclick="go('home')">पुनः अनुभव करें</button>
 </div>
 
@@ -217,20 +226,17 @@ function go(id){
 
 document.querySelectorAll(".option").forEach(opt=>{
   opt.addEventListener("click", function(){
-
     document.querySelectorAll(".option")
       .forEach(o=>o.classList.remove("selected"));
 
     this.classList.add("selected");
-
     selectedLevel = this.dataset.level;
-
     document.getElementById("nextBtn").disabled = false;
-
   });
 });
 
 const angleMap = {1:-80,2:-40,3:0,4:40,5:80};
+
 const textMap = {
   1:"अविद्या (भौतिक दृष्टि)",
   2:"कर्म-बोध",
@@ -238,6 +244,7 @@ const textMap = {
   4:"साक्षी-भाव",
   5:"सत्य के निकट"
 };
+
 const insightMap = {
   1:"चेतना अभी बाह्य संसार और परिणामों में उलझी हुई है।",
   2:"उत्तरदायित्व का बोध है, पर कर्तापन बना हुआ है।",
@@ -249,15 +256,11 @@ const insightMap = {
 function startSpin(){
   const wheel = document.getElementById("wheel");
   wheel.style.animation = "none";
-
   currentRotation += 1800;
-
   wheel.style.transition = "transform 3.5s cubic-bezier(.12,.75,.38,1)";
   wheel.style.transform = "rotate(" + currentRotation + "deg)";
 
-  setTimeout(()=>{
-    goResult();
-  }, 3600);
+  setTimeout(()=>{ goResult(); },3600);
 }
 
 function goResult(){
@@ -266,12 +269,14 @@ function goResult(){
   const needle = document.getElementById("needle");
 
   needle.style.transform = "translateX(-50%) rotate(-90deg)";
+
   setTimeout(()=>{
     needle.style.transform =
       "translateX(-50%) rotate(" + angleMap[level] + "deg)";
+
     document.getElementById("levelText").innerText = textMap[level];
     document.getElementById("insightText").innerText = insightMap[level];
-  }, 300);
+  },300);
 }
 </script>
 
