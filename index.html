@@ -182,12 +182,18 @@ function go(id){
 }
 
 document.querySelectorAll(".option").forEach(opt=>{
-  opt.onclick=()=>{
-    document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
-    opt.classList.add("selected");
-    selectedLevel = opt.dataset.level;
-    document.getElementById("nextBtn").disabled=false;
-  }
+  opt.addEventListener("click", function(){
+
+    document.querySelectorAll(".option")
+      .forEach(o=>o.classList.remove("selected"));
+
+    this.classList.add("selected");
+
+    selectedLevel = this.dataset.level;
+
+    document.getElementById("nextBtn").disabled = false;
+
+  });
 });
 
 const angleMap = {1:-80,2:-40,3:0,4:40,5:80};
