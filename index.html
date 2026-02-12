@@ -184,7 +184,7 @@ button{
 
   <button onclick="go('home')">पुनः अनुभव करें</button>
 </div>
-
+let currentRotation = 0;
 <script>
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
@@ -220,14 +220,13 @@ const insightMap = {
 function startSpin(){
   const wheel = document.getElementById("wheel");
 
-  // pulse बंद करें
   wheel.style.animation = "none";
 
-  // fixed 5 full rotations
-  const spinDeg = 1800;
+  // हर बार 5 full rotation add करें
+  currentRotation += 1800;
 
   wheel.style.transition = "transform 3.5s cubic-bezier(.12,.75,.38,1)";
-  wheel.style.transform = "rotate(" + spinDeg + "deg)";
+  wheel.style.transform = "rotate(" + currentRotation + "deg)";
 
   setTimeout(()=>{
     goResult();
