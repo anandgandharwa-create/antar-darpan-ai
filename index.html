@@ -223,7 +223,9 @@ button{
 
 <!-- SPIN -->
 <div class="screen hidden" id="spin">
-  <h2>ऊर्जा संरेखित हो रही है</h2>
+ <h2 id="spinText" style="display:none;">
+  ऊर्जा संरेखित हो रही है
+</h2>
   <div id="wheel"></div>
   <button onclick="startSpin()">SPIN करें</button>
 </div>
@@ -282,7 +284,8 @@ const insightMap = {
 };
 
 function startSpin(){
-  const wheel = document.getElementById("wheel");
+ const wheel = document.getElementById("wheel");
+   document.getElementById("spinText").style.display = "block";
   wheel.style.animation = "none";
   currentRotation += 1800;
   wheel.style.transition = "transform 3.5s cubic-bezier(.12,.75,.38,1)";
