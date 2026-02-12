@@ -79,15 +79,12 @@ button{
 @keyframes pulseGlow{
   0%{
     box-shadow: 0 0 20px rgba(255,255,255,.15);
-    transform: scale(1);
-  }
+ }
   50%{
     box-shadow: 0 0 60px rgba(255,255,255,.35);
-    transform: scale(1.03);
-  }
+   }
   100%{
     box-shadow: 0 0 20px rgba(255,255,255,.15);
-    transform: scale(1);
   }
 }
 /* ===== METER ===== */
@@ -222,12 +219,19 @@ const insightMap = {
 
 function startSpin(){
   const wheel = document.getElementById("wheel");
-  const randomDeg = 1440 + Math.floor(Math.random()*360);
+
+  // pulse बंद करें
+  wheel.style.animation = "none";
+
+  // 5–6 full rotation + random stop
+  const randomDeg = 1800 + Math.floor(Math.random()*360);
+
+  wheel.style.transition = "transform 3.5s cubic-bezier(.17,.67,.83,.67)";
   wheel.style.transform = "rotate(" + randomDeg + "deg)";
 
   setTimeout(()=>{
     goResult();
-  }, 4200);
+  }, 3600);
 }
 
 function goResult(){
