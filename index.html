@@ -223,17 +223,16 @@ function startSpin(){
   // pulse बंद करें
   wheel.style.animation = "none";
 
-  // 5–6 full rotation + random stop
-  const randomDeg = 1800 + Math.floor(Math.random()*360);
+  // fixed 5 full rotations
+  const spinDeg = 1800;
 
-  wheel.style.transition = "transform 3.5s cubic-bezier(.17,.67,.83,.67)";
-  wheel.style.transform = "rotate(" + randomDeg + "deg)";
+  wheel.style.transition = "transform 3.5s cubic-bezier(.12,.75,.38,1)";
+  wheel.style.transform = "rotate(" + spinDeg + "deg)";
 
   setTimeout(()=>{
     goResult();
   }, 3600);
 }
-
 function goResult(){
   go("result");
   const level = selectedLevel || 3;
